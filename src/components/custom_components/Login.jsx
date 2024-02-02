@@ -12,44 +12,44 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { baseurl } from "@/utils/constants";
 import Logo from "./Logo";
+import { login } from "@/utils/authService";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/reducers/authReducer";
+import Spinner from "./Spinner";
 
 function Login() {
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const [credentials, setCredentials] = useState({ phone: "", password: "" });
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let user = localStorage.getItem("User");
     if (user) {
       user = JSON.parse(user);
     }
-    console.log(user);
   }, []);
 
-  const handleSubmit = async () => {
+  const handleLogin = async () => {
     try {
-      if (password !== confirmPassword) {
+      setIsLoading(true);
+      if (credentials.password !== confirmPassword) {
         setError("Passwords do not match");
         return;
       }
+      const response = await login(credentials);
 
-      const response = await axios.post(`${baseurl}/users/login`, {
-        phone,
-        password,
-      });
-
-      if (response.status === 200) {
-        let userdata = response.data;
-        userdata = JSON.stringify(userdata);
-        localStorage.setItem("User", userdata);
+      if (response.status !== 200) {
+        setError(response);
       }
+
+      dispatch(setUser(response.data));
+      setIsLoading(false);
     } catch (error) {
-      console.error("error during login :", error.response.data.message);
-      setError(error.response.data.message);
+      console.error("Login failed:", error);
+      setIsLoading(false);
     }
   };
 
@@ -69,15 +69,19 @@ function Login() {
               className="my-2"
               type="text"
               placeholder="Your Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={credentials.phone}
+              onChange={(e) =>
+                setCredentials({ ...credentials, phone: e.target.value })
+              }
             />
             <Input
               className="my-2"
               type="password"
               placeholder="Your Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={credentials.password}
+              onChange={(e) =>
+                setCredentials({ ...credentials, password: e.target.value })
+              }
             />
             <Input
               className="my-2"
@@ -92,9 +96,16 @@ function Login() {
             </Link>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" onClick={handleSubmit}>
-              Login
-            </Button>
+            {isLoading ? (
+              <Button disabled className="w-full">
+                <Spinner />
+                Logging You In...
+              </Button>
+            ) : (
+              <Button className="w-full" onClick={handleLogin}>
+                Login
+              </Button>
+            )}
           </CardFooter>
         </Card>
 

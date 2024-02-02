@@ -13,52 +13,49 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Checkbox } from "../ui/checkbox";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { baseurl } from "@/utils/constants";
-import axios from "axios";
 import Logo from "./Logo";
+import { signUp } from "@/utils/authService";
+import Spinner from "./Spinner";
 
 const Register = () => {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isSeller, setIsSeller] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [credentials, setCredentials] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    password: "",
+    isSeller: false,
+  });
 
   const handleSubmit = async () => {
     try {
-      if (password !== confirmPassword) {
-        setError("passwords do not match");
+      setIsLoading(true);
+      if (credentials.password !== confirmPassword) {
+        setError("Passwords do not match");
         return;
       }
+      const response = await signUp(credentials);
 
-      const response = await axios.post(`${baseurl}/users/register`, {
-        name,
-        phone,
-        email,
-        password,
-        isSeller,
-      });
-
-      if (response.status === 200) {
-        const userdata = response.data;
-        console.log(userdata);
+      if (response.status !== 200) {
+        setError(response);
       }
+      setIsLoading(false);
     } catch (error) {
-      console.error("error during login:", error.response.data.message);
-      setError(error.response.data.message);
+      console.error("error during regestring:", error);
+      setIsLoading(false);
     }
   };
-
- 
 
   return (
     <>
       <div className="w-full h-screen flex flex-col items-center justify-center p-4 relative">
-        <span className=" absolute top-[3.5rem]">
+        <span className="absolute top-[3.5rem]">
           <Logo />
         </span>
+
         <Card className="md:w-96 w-80">
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
@@ -66,8 +63,10 @@ const Register = () => {
           </CardHeader>
           <CardContent>
             <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={credentials.name}
+              onChange={(e) =>
+                setCredentials({ ...credentials, name: e.target.value })
+              }
               className="my-2"
               type="text"
               placeholder="Your Name"
@@ -76,12 +75,16 @@ const Register = () => {
               className="my-2"
               type="text"
               placeholder="Your Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={credentials.phone}
+              onChange={(e) =>
+                setCredentials({ ...credentials, phone: e.target.value })
+              }
             />
             <Input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={credentials.email}
+              onChange={(e) =>
+                setCredentials({ ...credentials, email: e.target.value })
+              }
               className="my-2"
               type="email"
               placeholder="Your Email"
@@ -90,8 +93,10 @@ const Register = () => {
               className="my-2"
               type="password"
               placeholder="Your Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={credentials.password}
+              onChange={(e) =>
+                setCredentials({ ...credentials, password: e.target.value })
+              }
             />
             <Input
               className="my-2"
@@ -103,14 +108,20 @@ const Register = () => {
             <div className="flex items-center py-1">
               <Checkbox
                 id="isSeller"
-                checked={isSeller}
-                onCheckedChange={() => setIsSeller(!isSeller)}
+                checked={credentials.isSeller}
+                // onCheckedChange={() => setIsSeller(!isSeller)}
+                onCheckedChange={() =>
+                  setCredentials({
+                    ...credentials,
+                    isSeller: !credentials.isSeller,
+                  })
+                }
               />
               <label
                 htmlFor="isSeller"
-                className="text-sm font-medium leading-none pl-2 capitalize peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-sm font-medium opacity-70 leading-none pl-2 capitalize peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Want to be a seller ?
+                Wanna be a seller ?
               </label>
             </div>
             <Link to="/" className="text-xs underline">
@@ -118,9 +129,16 @@ const Register = () => {
             </Link>
           </CardContent>
           <CardFooter>
-            <Button onClick={handleSubmit} className="w-full">
-              Sign Up
-            </Button>
+            {isLoading ? (
+              <Button disabled className="w-full">
+                <Spinner />
+                Registering...
+              </Button>
+            ) : (
+              <Button className="w-full" onClick={handleSubmit}>
+                Login
+              </Button>
+            )}
           </CardFooter>
         </Card>
 
