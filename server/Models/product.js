@@ -6,7 +6,7 @@ const ProductSchema = new Schema({
     required: true,
   },
   price: {
-    type: Number,
+    type: String,
     required: true,
   },
   // category: {
@@ -24,10 +24,10 @@ const ProductSchema = new Schema({
   },
   rating: {
     type: Number,
+    default: 0,
     min: 0,
     max: 5,
   },
-
   created: {
     type: Date,
     default: Date.now,

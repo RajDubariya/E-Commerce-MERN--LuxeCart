@@ -4,8 +4,16 @@ import { cloudinary } from "../utils/cloudinary.js";
 const createProduct = async (req, res) => {
   try {
     const { name, price, description, brand, rating } = req.body;
-    const file = req.files.image;
+    const file = req.files?.image;
 
+    if (name === "" || price === "" || description === "" || brand === "") {
+      return res.status(400).json({ message: "Please fillup all fields..." });
+    }
+    if (!file) {
+      return res
+        .status(400)
+        .json({ message: "Please choose a image to upload...." });
+    }
     const result = await cloudinary.uploader.upload(file.tempFilePath, {
       folder: "products",
       gravity: "center",
@@ -34,7 +42,7 @@ const createProduct = async (req, res) => {
       rating: newProduct.rating,
     });
   } catch (error) {
-    console.error(`error while creating product`);
+    console.error(`error while creating product (backend)`);
     console.error(error);
     res.status(500).json(error);
   }
