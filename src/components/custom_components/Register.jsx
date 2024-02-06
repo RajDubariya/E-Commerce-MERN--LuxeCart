@@ -1,3 +1,9 @@
+import { signUp } from "@/utils/authService";
+import { AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
@@ -6,15 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Checkbox } from "../ui/checkbox";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Input } from "../ui/input";
 import Logo from "./Logo";
-import { signUp } from "@/utils/authService";
 import Spinner from "./Spinner";
 
 const Register = () => {
@@ -42,6 +42,7 @@ const Register = () => {
       if (response.status !== 200) {
         setError(response);
       }
+
       setIsLoading(false);
     } catch (error) {
       console.error("error during regestring:", error);

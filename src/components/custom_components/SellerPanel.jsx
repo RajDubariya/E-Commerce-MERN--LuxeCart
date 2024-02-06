@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,8 +14,9 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { AlertCircle, PlusIcon } from "lucide-react";
-import { createProduct } from "@/utils/productService";
+import { createProduct, getProducts } from "@/utils/productService";
 import Spinner from "./Spinner";
+import User from "./User";
 
 const SellerPanel = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +28,21 @@ const SellerPanel = () => {
     brand: "",
     image: null,
   });
+
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    try {
+      const fetchProducts = async () => {
+        const products = await getProducts();
+        setProducts(products);
+      };
+
+      fetchProducts();
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -53,10 +69,12 @@ const SellerPanel = () => {
   return (
     <>
       <div className="w-full min-h-screen relative">
-        <nav className="border-b p-3">
+        <nav className="border-b p-3 px-6 flex items-center justify-between">
           <h3 className="scroll-m-20 text-2xl tracking-tight">Seller Panel</h3>
+          <User />
         </nav>
-
+        diplay seller products
+        <div>No products</div>
         <Dialog>
           <DialogTrigger asChild>
             <div className="absolute bottom-10 right-10 border border-black rounded-full p-2.5 cursor-pointer flex items-center justify-center">

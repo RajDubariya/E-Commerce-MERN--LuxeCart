@@ -17,8 +17,6 @@ const createProduct = async (req, res) => {
     const result = await cloudinary.uploader.upload(file.tempFilePath, {
       folder: "products",
       gravity: "center",
-      height: 200,
-      width: 300,
     });
 
     const newProduct = new Product({

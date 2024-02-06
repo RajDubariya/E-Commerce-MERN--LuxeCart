@@ -1,3 +1,11 @@
+import { setUser } from "@/redux/reducers/authReducer";
+import { login } from "@/utils/authService";
+import { AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
@@ -7,15 +15,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Logo from "./Logo";
-import { login } from "@/utils/authService";
-import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/reducers/authReducer";
 import Spinner from "./Spinner";
 
 function Login() {
@@ -24,13 +24,6 @@ function Login() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    let user = localStorage.getItem("User");
-    if (user) {
-      user = JSON.parse(user);
-    }
-  }, []);
 
   const handleLogin = async () => {
     try {
@@ -43,6 +36,9 @@ function Login() {
 
       if (response.status !== 200) {
         setError(response);
+      }
+      if (response.status === 200) {
+        localStorage.setItem("User", JSON.stringify(response.data));
       }
 
       dispatch(setUser(response.data));

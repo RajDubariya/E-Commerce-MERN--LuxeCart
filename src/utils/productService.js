@@ -1,12 +1,13 @@
 import axios from "axios";
 import { baseurl } from "./constants";
+import { getUser } from "./userService";
 
-const getToken = () => {
-  let user = localStorage.getItem("User");
-  user = JSON.parse(user);
-  return user;
-};
-
+// const config = {
+//   headers: {
+//     Authorization: "Bearer " + getUser().token,
+//     "Content-Type": "multipart/form-data",
+//   },
+// };
 const createProduct = async (productDetails) => {
   try {
     const formData = new FormData();
@@ -21,12 +22,11 @@ const createProduct = async (productDetails) => {
       formData,
       {
         headers: {
-          Authorization: "Bearer " + getToken().token,
+          Authorization: "Bearer " + getUser()?.token,
           "Content-Type": "multipart/form-data",
         },
       }
     );
-
     return response;
   } catch (error) {
     console.log("error while creating product (Client)" + error);
@@ -34,4 +34,20 @@ const createProduct = async (productDetails) => {
   }
 };
 
-export { createProduct };
+const getProducts = async () => {
+  try {
+    const response = await axios.get(`${baseurl}/products/getproducts`, {
+      headers: {
+        Authorization: "Bearer " + getUser()?.token,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log("error while creating product (Client)" + error);
+    return error;
+  }
+};
+
+export { createProduct, getProducts };

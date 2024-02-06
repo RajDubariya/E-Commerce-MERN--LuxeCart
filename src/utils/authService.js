@@ -5,11 +5,10 @@ const login = async (credentials) => {
   try {
     const response = await axios.post(`${baseurl}/users/login`, credentials);
 
-    if (response.status === 200) {
-      let userdata = response.data;
-      userdata = JSON.stringify(userdata);
-      localStorage.setItem("User", userdata);
-    }
+    // if (response.status === 200) {
+    //   let userdata = response.data;
+    //   localStorage.setItem("User", JSON.stringify(userdata));
+    // }
 
     return response;
   } catch (error) {

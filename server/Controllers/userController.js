@@ -96,6 +96,7 @@ const loginUser = async (req, res) => {
       name: user.name,
       phone: user.phone,
       email: user.email,
+      isSeller: user.isSeller,
       token: token,
     });
   } catch (error) {
