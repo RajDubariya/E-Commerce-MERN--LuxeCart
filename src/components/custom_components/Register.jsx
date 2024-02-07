@@ -1,7 +1,7 @@
 import { signUp } from "@/utils/authService";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Button } from "../ui/button";
 import {
@@ -18,6 +18,7 @@ import Logo from "./Logo";
 import Spinner from "./Spinner";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +43,7 @@ const Register = () => {
       if (response.status !== 200) {
         setError(response);
       }
-
+      navigate("/");
       setIsLoading(false);
     } catch (error) {
       console.error("error during regestring:", error);

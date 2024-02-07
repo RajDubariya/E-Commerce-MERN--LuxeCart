@@ -16,7 +16,6 @@ const authenticateToken = (req, res, next) => {
       console.log("error verifying token : " + err);
       return res.status(403).json({ message: "Forbidden" });
     }
-    // If token is valid, you can attach the user data to the request
     req.user = user;
     next();
   });

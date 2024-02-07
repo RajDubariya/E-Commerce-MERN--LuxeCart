@@ -3,7 +3,7 @@ import { login } from "@/utils/authService";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Button } from "../ui/button";
 import {
@@ -19,6 +19,7 @@ import Logo from "./Logo";
 import Spinner from "./Spinner";
 
 function Login() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [credentials, setCredentials] = useState({ phone: "", password: "" });
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -42,6 +43,7 @@ function Login() {
       }
 
       dispatch(setUser(response.data));
+      navigate("/home");
       setIsLoading(false);
     } catch (error) {
       console.error("Login failed:", error);
