@@ -3,7 +3,7 @@ import { cloudinary } from "../utils/cloudinary.js";
 
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description, brand, rating } = req.body;
+    const { name, price, description, brand } = req.body;
     const file = req.files?.image;
 
     if (name === "" || price === "" || description === "" || brand === "") {
@@ -25,7 +25,6 @@ const createProduct = async (req, res) => {
       imageurl: result.secure_url,
       description,
       brand,
-      rating,
     });
 
     await newProduct.save();
@@ -37,7 +36,7 @@ const createProduct = async (req, res) => {
       imageurl: newProduct.imageurl,
       description: newProduct.description,
       brand: newProduct.brand,
-      rating: newProduct.rating,
+      ratings: newProduct.ratings,
     });
   } catch (error) {
     console.error(`error while creating product (backend)`);
@@ -58,4 +57,47 @@ const getProducts = async (req, res) => {
   }
 };
 
-export { createProduct, getProducts };
+const getProductById = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error(`error while fetching single product`);
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+
+const rateProduct = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    let { rating } = req.body;
+    rating = Number(rating);
+
+    if (typeof rating !== "number" || rating < 0 || rating > 5) {
+      return res.status(400).json({ error: "Invalid rating value" });
+    }
+
+    const product = await Product.findByIdAndUpdate(
+      productId,
+      {
+        $push: { ratings: rating },
+        $inc: { numberOfRatings: 1 },
+      },
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error(`error while rating product`);
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+export { createProduct, getProducts, rateProduct, getProductById };

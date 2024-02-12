@@ -4,6 +4,7 @@ import Home from "./components/custom_components/Home";
 import Login from "./components/custom_components/Login";
 import Register from "./components/custom_components/Register";
 import SellerPanel from "./components/custom_components/SellerPanel";
+import Product from "./components/custom_components/Product";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/signup" element={<Register />} />
         <Route path="/seller" element={<SellerPanel />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/product/:productId" element={<Product />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>

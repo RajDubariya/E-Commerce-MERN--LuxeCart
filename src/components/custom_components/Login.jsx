@@ -31,19 +31,21 @@ function Login() {
       setIsLoading(true);
       if (credentials.password !== confirmPassword) {
         setError("Passwords do not match");
+        setIsLoading(false);
         return;
       }
       const response = await login(credentials);
 
       if (response.status !== 200) {
         setError(response);
+        setIsLoading(false);
       }
       if (response.status === 200) {
         localStorage.setItem("User", JSON.stringify(response.data));
+        navigate("/home");
       }
 
       dispatch(setUser(response.data));
-      navigate("/home");
       setIsLoading(false);
     } catch (error) {
       console.error("Login failed:", error);

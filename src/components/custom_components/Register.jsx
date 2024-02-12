@@ -35,6 +35,7 @@ const Register = () => {
     try {
       setIsLoading(true);
       if (credentials.password !== confirmPassword) {
+        setIsLoading(false);
         setError("Passwords do not match");
         return;
       }
@@ -42,8 +43,12 @@ const Register = () => {
 
       if (response.status !== 200) {
         setError(response);
+        setIsLoading(false);
       }
-      navigate("/");
+      if (response.status === 200) {
+        navigate("/");
+      }
+
       setIsLoading(false);
     } catch (error) {
       console.error("error during regestring:", error);

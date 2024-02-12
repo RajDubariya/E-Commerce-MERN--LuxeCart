@@ -1,10 +1,11 @@
 import { getProducts } from "@/utils/productService";
 import { useEffect, useState } from "react";
-import User from "./User";
-import Logo from "./Logo";
 import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
+import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -20,35 +21,48 @@ const Home = () => {
     }
   }, []);
 
-  const renderStars = (rating) => {
+  const renderStars = (product) => {
+    const sumOfRatings = product?.ratings.reduce(
+      (total, rating) => total + rating,
+      0
+    );
+
+    const avgRating = Math.floor(sumOfRatings / product?.numberOfRatings);
     const stars = [];
-    for (let i = 0; i < rating; i++) {
+    for (let i = 0; i < avgRating; i++) {
       stars.push(<TiStarFullOutline key={i} className="text-yellow-400" />);
     }
     return stars;
   };
 
+  const handleClick = (id) => {
+    if (id) {
+      navigate(`/product/${id}`);
+    }
+  };
+
   return (
     <>
       <div>
-        <nav className="border-b p-3 px-6 flex items-center justify-between">
-          <Logo />
-          <User />
-        </nav>
-        <div className="grid xl:grid-cols-6 md:grid-cols-3 sm:grid-cols-2 gap-5 p-3">
+        <Navbar />
+        <div className="grid xl:grid-cols-6 md:grid-cols-3 sm:grid-cols-2 gap-5 p-3 ">
           {products?.map((product) => (
-            <div key={product._id}>
-              <div className="bg-white border border-gray-200 rounded-md shadow p-2">
+            <div
+              className="cursor-pointer"
+              key={product._id}
+              onClick={() => handleClick(product?._id)}
+            >
+              <div className="bg-white border border-gray-200 rounded-md shadow-md p-2">
                 <div className=" flex justify-center items-center p-3">
                   <img
                     src={product.imageurl}
                     alt={product.name}
-                    className="mix-blend-multiply h-[10rem]"
+                    className="mix-blend-multiply h-[9rem]"
                   />
                 </div>
 
                 <div className="p-3">
-                  <h5 className="mb-2 text-xl tracking-tight text-gray-900 capitalize">
+                  <h5 className="mb-2 text-xl tracking-wide font-semibold text-gray-900 capitalize">
                     {product.name}
                   </h5>
 
@@ -60,10 +74,10 @@ const Home = () => {
                     Brand: {product.brand}
                   </p>
                   <span className="font-normal text-gray-700 flex py-1">
-                    {product.rating > 0 ? (
-                      renderStars(product.rating)
+                    {product.numberOfRatings > 0 ? (
+                      renderStars(product)
                     ) : (
-                      <TiStarOutline className=" text-yellow-400" />
+                      <TiStarOutline className="text-yellow-400" />
                     )}
                   </span>
                 </div>
