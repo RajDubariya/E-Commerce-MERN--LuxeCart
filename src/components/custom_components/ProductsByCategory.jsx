@@ -1,15 +1,17 @@
-import { getProducts } from "@/utils/productService";
+import { getProductsByCategory } from "@/utils/productService";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
 
-const Home = () => {
+const ProductsByCategory = () => {
+  const { category } = useParams();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     try {
       const fetchProducts = async () => {
-        const products = await getProducts();
-        setProducts(products);
+        const response = await getProductsByCategory(category);
+        setProducts(response?.products);
       };
 
       fetchProducts();
@@ -25,4 +27,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default ProductsByCategory;

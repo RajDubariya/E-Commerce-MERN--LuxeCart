@@ -1,10 +1,13 @@
+import Category from "../Models/category.js";
 import Product from "../Models/product.js";
 import { cloudinary } from "../utils/cloudinary.js";
 
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description, brand } = req.body;
+    const { name, price, description, brand, category } = req.body;
     const file = req.files?.image;
+
+    const foundCategory = await Category.findOne({ name: category });
 
     if (name === "" || price === "" || description === "" || brand === "") {
       return res.status(400).json({ message: "Please fillup all fields..." });
@@ -25,9 +28,15 @@ const createProduct = async (req, res) => {
       imageurl: result.secure_url,
       description,
       brand,
+      category: foundCategory._id,
     });
 
     await newProduct.save();
+
+    // save product to category's products arrray
+
+    foundCategory.products.push(newProduct._id);
+    await foundCategory.save();
 
     res.status(200).json({
       productId: newProduct._id,
@@ -37,6 +46,7 @@ const createProduct = async (req, res) => {
       description: newProduct.description,
       brand: newProduct.brand,
       ratings: newProduct.ratings,
+      category: newProduct.category,
     });
   } catch (error) {
     console.error(`error while creating product (backend)`);
@@ -60,7 +70,9 @@ const getProducts = async (req, res) => {
 const getProductById = async (req, res) => {
   try {
     const { productId } = req.params;
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate({
+      path: "category",
+    });
 
     res.status(200).json(product);
   } catch (error) {
@@ -76,7 +88,7 @@ const rateProduct = async (req, res) => {
     let { rating } = req.body;
     rating = Number(rating);
 
-    if (typeof rating !== "number" || rating < 0 || rating > 5) {
+    if (rating < 0 || rating > 5) {
       return res.status(400).json({ error: "Invalid rating value" });
     }
 

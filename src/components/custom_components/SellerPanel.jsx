@@ -1,22 +1,23 @@
+import { getCategories } from "@/utils/categoryService";
+import { createProduct } from "@/utils/productService";
+import { AlertCircle, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "../ui/dialog";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { AlertCircle, PlusIcon } from "lucide-react";
-import { createProduct, getProducts } from "@/utils/productService";
+import Navbar from "./Navbar";
 import Spinner from "./Spinner";
-import User from "./User";
 
 const SellerPanel = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,22 +27,18 @@ const SellerPanel = () => {
     price: "",
     description: "",
     brand: "",
+    category: "",
     image: null,
   });
 
-  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    try {
-      const fetchProducts = async () => {
-        const products = await getProducts();
-        setProducts(products);
-      };
-
-      fetchProducts();
-    } catch (error) {
-      console.error(error);
-    }
+    const fetchCategories = async () => {
+      const response = await getCategories();
+      setCategories(response);
+    };
+    fetchCategories();
   }, []);
 
   const handleImageChange = (e) => {
@@ -69,15 +66,12 @@ const SellerPanel = () => {
   return (
     <>
       <div className="w-full min-h-screen relative">
-        <nav className="border-b p-3 px-6 flex items-center justify-between">
-          <h3 className="scroll-m-20 text-2xl tracking-tight">Seller Panel</h3>
-          <User />
-        </nav>
+        <Navbar />
         diplay seller products
         <div>No products</div>
         <Dialog>
           <DialogTrigger asChild>
-            <div className="absolute bottom-10 right-10 border border-black rounded-full p-2.5 cursor-pointer flex items-center justify-center">
+            <div className="absolute bottom-10 right-10 border border-gray-300 rounded-full p-2.5 cursor-pointer flex items-center justify-center">
               <PlusIcon className="h-9 w-9" />
             </div>
           </DialogTrigger>
@@ -145,6 +139,47 @@ const SellerPanel = () => {
                     })
                   }
                 />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4 ">
+                <Label>Category</Label>
+                {/* <Select
+                  onValueChange={(e) =>
+                    setProductDetails({
+                      ...productDetails,
+                      category: e.target.value,
+                    })
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {categories?.map((category) => (
+                        <SelectItem key={category?._id} value={category?.name}>
+                          {category?.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select> */}
+
+                <select
+                  className="border border-gray-200 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 cursor-pointer"
+                  onChange={(e) =>
+                    setProductDetails({
+                      ...productDetails,
+                      category: e.target.value,
+                    })
+                  }
+                >
+                  <option value="">Select Category</option>
+                  {categories?.map((category) => (
+                    <option key={category?._id} value={category?.name}>
+                      {category?.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="image">Image (required)</Label>

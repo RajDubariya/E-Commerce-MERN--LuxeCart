@@ -5,6 +5,7 @@ import Login from "./components/custom_components/Login";
 import Register from "./components/custom_components/Register";
 import SellerPanel from "./components/custom_components/SellerPanel";
 import Product from "./components/custom_components/Product";
+import ProductByCategory from "./components/custom_components/ProductsByCategory";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/seller" element={<SellerPanel />} />
         <Route path="/home" element={<Home />} />
         <Route path="/product/:productId" element={<Product />} />
+        <Route path="/category/:category" element={<ProductByCategory />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
