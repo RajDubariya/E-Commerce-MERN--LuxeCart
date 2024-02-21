@@ -8,7 +8,7 @@ import { productRoute } from "./Routes/productRoute.js";
 import fileUpload from "express-fileupload";
 import { categoryRoute } from "./Routes/categoryRoute.js";
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 const app = express();
 
 // Database connection

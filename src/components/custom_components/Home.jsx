@@ -1,6 +1,7 @@
 import { getProducts } from "@/utils/productService";
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import Navbar from "./Navbar";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -11,7 +12,6 @@ const Home = () => {
         const products = await getProducts();
         setProducts(products);
       };
-
       fetchProducts();
     } catch (error) {
       console.error(error);
@@ -20,6 +20,7 @@ const Home = () => {
 
   return (
     <>
+      <Navbar />
       <ProductCard products={products} />
     </>
   );

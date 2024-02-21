@@ -18,6 +18,7 @@ const createProduct = async (productDetails) => {
     formData.append("brand", productDetails.brand);
     formData.append("category", productDetails.category);
     formData.append("image", productDetails.image);
+    formData.append("seller", getUser()?.userId);
 
     const response = await axios.post(
       `${baseurl}/products/createproduct`,
@@ -37,7 +38,7 @@ const getProducts = async () => {
 
     return response.data;
   } catch (error) {
-    console.log("error while creating product (Client)" + error);
+    console.log("error while fetching products (Client)" + error);
     return error;
   }
 };
@@ -81,11 +82,52 @@ const getProductsByCategory = async (category) => {
     return error;
   }
 };
+const getProductBySeller = async () => {
+  try {
+    const response = await axios.get(
+      `${baseurl}/products/getproducts/${getUser()?.userId}`,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.log("error while fetching products by seller (Client)" + error);
+    return error;
+  }
+};
 
+const deleteProduct = async (productId) => {
+  try {
+    const response = await axios.delete(
+      `${baseurl}/products/deleteproduct/${productId}`,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.log("error while deleting product (Client)" + error);
+    return error;
+  }
+};
+
+const updateProduct = async (productId, updateProductDetails) => {
+  try {
+    const response = await axios.put(
+      `${baseurl}/products/updateproduct/${productId}`,
+      updateProductDetails,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.log("error while updating product (Client)" + error);
+    return error;
+  }
+};
 export {
   createProduct,
   getProducts,
   getProductById,
   rateProduct,
   getProductsByCategory,
+  getProductBySeller,
+  deleteProduct,
+  updateProduct,
 };

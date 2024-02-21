@@ -1,6 +1,6 @@
+import PropTypes from "prop-types";
 import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
 
 const ProductCard = ({ products }) => {
   const navigate = useNavigate();
@@ -27,7 +27,6 @@ const ProductCard = ({ products }) => {
 
   return (
     <>
-      <Navbar />
       <div className="grid xl:grid-cols-6 md:grid-cols-3 sm:grid-cols-2 gap-5 p-3 ">
         {products?.map((product) => (
           <div
@@ -70,6 +69,10 @@ const ProductCard = ({ products }) => {
       </div>
     </>
   );
+};
+
+ProductCard.propTypes = {
+  products: PropTypes.array.isRequired,
 };
 
 export default ProductCard;

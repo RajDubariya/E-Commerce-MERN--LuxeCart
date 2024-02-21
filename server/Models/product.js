@@ -23,6 +23,10 @@ const ProductSchema = new Schema({
   brand: {
     type: String,
   },
+  seller: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   ratings: {
     type: [
       {

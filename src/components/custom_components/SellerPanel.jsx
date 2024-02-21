@@ -1,5 +1,5 @@
 import { getCategories } from "@/utils/categoryService";
-import { createProduct } from "@/utils/productService";
+import { createProduct, getProductBySeller } from "@/utils/productService";
 import { AlertCircle, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
@@ -17,6 +17,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import Navbar from "./Navbar";
+import ProductCard from "./ProductCard";
 import Spinner from "./Spinner";
 
 const SellerPanel = () => {
@@ -30,8 +31,8 @@ const SellerPanel = () => {
     category: "",
     image: null,
   });
-
   const [categories, setCategories] = useState([]);
+  const [sellerProducts, setSellerProducts] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -39,6 +40,14 @@ const SellerPanel = () => {
       setCategories(response);
     };
     fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await getProductBySeller();
+      setSellerProducts(response);
+    };
+    fetchProducts();
   }, []);
 
   const handleImageChange = (e) => {
@@ -59,6 +68,7 @@ const SellerPanel = () => {
       setIsLoading(false);
     } catch (error) {
       console.error("Product Creation failed:", error);
+      setError(error);
       setIsLoading(false);
     }
   };
@@ -67,8 +77,8 @@ const SellerPanel = () => {
     <>
       <div className="w-full min-h-screen relative">
         <Navbar />
-        diplay seller products
-        <div>No products</div>
+        <p className="ml-3 mt-2 text-2xl font-semibold">Your Products</p>
+        <ProductCard products={sellerProducts} />
         <Dialog>
           <DialogTrigger asChild>
             <div className="absolute bottom-10 right-10 border border-gray-300 rounded-full p-2.5 cursor-pointer flex items-center justify-center">

@@ -1,10 +1,11 @@
+import mongoose from "mongoose";
 import Category from "../Models/category.js";
 import Product from "../Models/product.js";
 import { cloudinary } from "../utils/cloudinary.js";
 
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description, brand, category } = req.body;
+    const { name, price, description, brand, category, seller } = req.body;
     const file = req.files?.image;
 
     const foundCategory = await Category.findOne({ name: category });
@@ -27,6 +28,7 @@ const createProduct = async (req, res) => {
       price,
       imageurl: result.secure_url,
       description,
+      seller,
       brand,
       category: foundCategory._id,
     });
@@ -47,6 +49,7 @@ const createProduct = async (req, res) => {
       brand: newProduct.brand,
       ratings: newProduct.ratings,
       category: newProduct.category,
+      seller: newProduct.seller,
     });
   } catch (error) {
     console.error(`error while creating product (backend)`);
@@ -55,6 +58,53 @@ const createProduct = async (req, res) => {
   }
 };
 
+const deleteProduct = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({ error: "Invalid product ID format" });
+    }
+
+    const result = await Product.findByIdAndDelete(productId);
+    if (!result) {
+      return res.status(404).json({ error: "Data not found" });
+    }
+
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error(`error while deleting product (backend)`);
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+
+const updateProductDetails = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { name, price, description } = req.body;
+
+    if (name === "" || price === "" || description === "") {
+      return res.status(400).json({ message: "Please fillup all fields..." });
+    }
+    const product = await Product.findByIdAndUpdate(
+      productId,
+      {
+        name,
+        price,
+        description,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json(product);
+  } catch (error) {
+    console.error(`error while updating product (backend)`);
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
 const getProducts = async (req, res) => {
   try {
     const products = await Product.find();
@@ -112,4 +162,26 @@ const rateProduct = async (req, res) => {
     res.status(500).json(error);
   }
 };
-export { createProduct, getProducts, rateProduct, getProductById };
+
+const getProductBySeller = async (req, res) => {
+  try {
+    const { sellerId } = req.params;
+
+    const products = await Product.find({ seller: sellerId });
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(`error while fetching products of seller`);
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+export {
+  createProduct,
+  getProducts,
+  rateProduct,
+  getProductById,
+  getProductBySeller,
+  deleteProduct,
+  updateProductDetails,
+};

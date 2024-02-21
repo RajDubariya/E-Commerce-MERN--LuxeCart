@@ -2,6 +2,7 @@ import { getProductsByCategory } from "@/utils/productService";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
+import Navbar from "./Navbar";
 
 const ProductsByCategory = () => {
   const { category } = useParams();
@@ -22,6 +23,7 @@ const ProductsByCategory = () => {
 
   return (
     <>
+      <Navbar />
       <ProductCard products={products} />
     </>
   );
