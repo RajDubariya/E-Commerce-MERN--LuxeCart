@@ -40,17 +40,17 @@ const Product = () => {
 
   const user = getUser();
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const response = await getProductById(productId);
+  const fetchProduct = async () => {
+    try {
+      const response = await getProductById(productId);
 
-        setProduct(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetch();
+      setProduct(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchProduct();
   }, []);
 
   const renderStars = (product) => {
@@ -74,9 +74,9 @@ const Product = () => {
 
     try {
       rateProduct(id, rating);
-      setRating(0);
+
       // After successfully rating, fetch the product again
-      await fetch();
+      await fetchProduct();
     } catch (error) {
       console.log(error);
     }
@@ -88,9 +88,14 @@ const Product = () => {
     navigate("/seller");
   };
 
-  const handleUpdateProduct = () => {
+  const handleUpdateProduct = async () => {
     setIsLoading(true);
-    updateProduct(productId, updateProductDetails);
+    try {
+      await updateProduct(productId, updateProductDetails);
+      await fetchProduct();
+    } catch (error) {
+      console.log(error);
+    }
     setIsLoading(false);
   };
   return (
@@ -194,12 +199,12 @@ const Product = () => {
               <p>{product?.description}</p>
             </div>
             <p className="py-1 font-semibold">Brand : {product?.brand}</p>
-            <div className="py-1 text-sm cursor-pointer">
+            <div className="py-1 text-sm ">
               Category :
               <Badge
                 onClick={() => navigate(`/category/${product?.category.name}`)}
                 variant="secondary"
-                className="text-md"
+                className="text-md cursor-pointer"
               >
                 {product?.category.name}
               </Badge>

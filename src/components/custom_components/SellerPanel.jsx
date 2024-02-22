@@ -42,11 +42,12 @@ const SellerPanel = () => {
     fetchCategories();
   }, []);
 
+  const fetchProducts = async () => {
+    const response = await getProductBySeller();
+    setSellerProducts(response);
+  };
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await getProductBySeller();
-      setSellerProducts(response);
-    };
     fetchProducts();
   }, []);
 
@@ -65,6 +66,7 @@ const SellerPanel = () => {
       if (response.status !== 200) {
         setError(response);
       }
+      await fetchProducts();
       setIsLoading(false);
     } catch (error) {
       console.error("Product Creation failed:", error);

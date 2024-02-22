@@ -84,20 +84,15 @@ const updateProductDetails = async (req, res) => {
     const { productId } = req.params;
     const { name, price, description } = req.body;
 
-    if (name === "" || price === "" || description === "") {
-      return res.status(400).json({ message: "Please fillup all fields..." });
-    }
-    const product = await Product.findByIdAndUpdate(
-      productId,
-      {
-        name,
-        price,
-        description,
-      },
-      {
-        new: true,
-      }
-    );
+    const updatedFields = {};
+
+    if (name) updatedFields.name = name;
+    if (price) updatedFields.price = price;
+    if (description) updatedFields.description = description;
+
+    const product = await Product.findByIdAndUpdate(productId, updatedFields, {
+      new: true,
+    });
     res.status(200).json(product);
   } catch (error) {
     console.error(`error while updating product (backend)`);
