@@ -31,6 +31,9 @@ const Cart = () => {
 
           <div className="md:w-[15%] p-4 border h-fit rounded-md shadow-md">
             <p className="text-xl font-semibold">
+              Total Items :{cart?.items.length}
+            </p>
+            <p className="text-xl font-semibold">
               Subtotal : <sup>₹</sup>
               {cart?.totalPrice}
             </p>

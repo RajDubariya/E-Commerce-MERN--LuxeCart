@@ -114,7 +114,7 @@ const Product = () => {
       <div className="min-h-screen">
         <Navbar />
 
-        {user?.isSeller && product?.seller == user?.userId ? (
+        {user?.isSeller && product?.seller === user?.userId ? (
           <div className="flex items-center p-3 justify-end">
             <Button onClick={handleDelete} variant="destructive">
               <Trash2Icon size={20} />
@@ -248,15 +248,19 @@ const Product = () => {
               </Button>
             </div>
 
-            {isAddedToCart ? (
-              <Button disabled className="bg-green-600 ">
-                <Check />
-              </Button>
-            ) : (
-              <Button onClick={addItemToCartClick} className="capitalize">
-                <ShoppingCart size={22} className="mr-2" />
-                add to cart
-              </Button>
+            {user?.isSeller && product?.seller !== user?.userId && (
+              <>
+                {isAddedToCart ? (
+                  <Button disabled className="bg-green-600 ">
+                    <Check />
+                  </Button>
+                ) : (
+                  <Button onClick={addItemToCartClick} className="capitalize">
+                    <ShoppingCart size={22} className="mr-2" />
+                    add to cart
+                  </Button>
+                )}
+              </>
             )}
           </div>
         </div>
