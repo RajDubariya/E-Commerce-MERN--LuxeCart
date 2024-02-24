@@ -5,7 +5,7 @@ import {
   updateProduct,
 } from "@/utils/productService";
 import { getUser } from "@/utils/userService";
-import { Trash2Icon } from "lucide-react";
+import { Check, ShoppingCart, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,12 +25,14 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import Navbar from "./Navbar";
 import Spinner from "./Spinner";
+import { addItemToCart } from "@/utils/cartService";
 
 const Product = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [rating, setRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [updateProductDetails, setUpdateProductDetails] = useState({
     name: "",
     price: "",
@@ -54,7 +56,7 @@ const Product = () => {
   }, []);
 
   const renderStars = (product) => {
-    const sumOfRatings = product?.ratings.reduce(
+    const sumOfRatings = product?.ratings?.reduce(
       (total, rating) => total + rating,
       0
     );
@@ -73,7 +75,7 @@ const Product = () => {
     setIsLoading(true);
 
     try {
-      rateProduct(id, rating);
+      await rateProduct(id, rating);
 
       // After successfully rating, fetch the product again
       await fetchProduct();
@@ -97,6 +99,15 @@ const Product = () => {
       console.log(error);
     }
     setIsLoading(false);
+  };
+
+  const addItemToCartClick = async () => {
+    try {
+      await addItemToCart(productId);
+      setIsAddedToCart(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -217,7 +228,7 @@ const Product = () => {
               )}
               <Badge variant="outline">{product?.numberOfRatings}</Badge>
             </div>
-            <div className="flex capitalize items-center py-1">
+            <div className="flex capitalize items-center py-1 mb-2">
               <p>rate this product : </p>
               <input
                 className="w-[8%] border rounded-md border-gray-200 p-1 ml-2"
@@ -236,6 +247,17 @@ const Product = () => {
                 {isLoading ? <Spinner /> : "Rate"}
               </Button>
             </div>
+
+            {isAddedToCart ? (
+              <Button disabled className="bg-green-600 ">
+                <Check />
+              </Button>
+            ) : (
+              <Button onClick={addItemToCartClick} className="capitalize">
+                <ShoppingCart size={22} className="mr-2" />
+                add to cart
+              </Button>
+            )}
           </div>
         </div>
       </div>

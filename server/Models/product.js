@@ -45,6 +45,10 @@ const ProductSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  updated: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Product = mongoose.model("Product", ProductSchema);

@@ -154,27 +154,6 @@ const SellerPanel = () => {
               </div>
               <div className="grid grid-cols-4 items-center gap-4 ">
                 <Label>Category</Label>
-                {/* <Select
-                  onValueChange={(e) =>
-                    setProductDetails({
-                      ...productDetails,
-                      category: e.target.value,
-                    })
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {categories?.map((category) => (
-                        <SelectItem key={category?._id} value={category?.name}>
-                          {category?.name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select> */}
 
                 <select
                   className="border border-gray-200 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 cursor-pointer"

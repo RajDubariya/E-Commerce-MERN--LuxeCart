@@ -1,13 +1,6 @@
 import axios from "axios";
-import { baseurl } from "./constants";
+import { baseurl, config } from "./constants";
 import { getUser } from "./userService";
-
-const config = {
-  headers: {
-    Authorization: "Bearer " + getUser()?.token,
-    "Content-Type": "multipart/form-data",
-  },
-};
 
 const createProduct = async (productDetails) => {
   try {

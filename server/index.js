@@ -3,10 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 import connectDataBase from "./utils/db.js";
+import fileUpload from "express-fileupload";
 import { userRoute } from "./Routes/userRoute.js";
 import { productRoute } from "./Routes/productRoute.js";
-import fileUpload from "express-fileupload";
 import { categoryRoute } from "./Routes/categoryRoute.js";
+import { cartRoute } from "./Routes/cartRoute.js";
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -27,6 +28,7 @@ app.use(
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/category", categoryRoute);
+app.use("/api/cart", cartRoute);
 
 app.listen(port, () => {
   console.log(`Server started at ${port}`);

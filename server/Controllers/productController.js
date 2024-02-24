@@ -90,6 +90,8 @@ const updateProductDetails = async (req, res) => {
     if (price) updatedFields.price = price;
     if (description) updatedFields.description = description;
 
+    updatedFields.updated = Date.now();
+
     const product = await Product.findByIdAndUpdate(productId, updatedFields, {
       new: true,
     });

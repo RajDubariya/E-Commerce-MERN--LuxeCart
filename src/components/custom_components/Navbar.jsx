@@ -1,4 +1,6 @@
 import { getUser } from "@/utils/userService";
+import { ShoppingCartIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import {
   HoverCard,
@@ -7,7 +9,6 @@ import {
 } from "../ui/hover-card";
 import Logo from "./Logo";
 import User from "./User";
-import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Navbar = () => {
     <>
       <nav className="border-b p-3 px-6 flex items-center justify-between">
         <Logo />
-        <div className="flex">
+        <div className="flex items-center">
           {user?.isSeller ? (
             <HoverCard>
               <HoverCardTrigger>
@@ -37,9 +38,16 @@ const Navbar = () => {
             </HoverCard>
           ) : null}
 
-          <div>
+          <Button
+            onClick={() => navigate("/cart")}
+            variant="outline"
+            className="p-2 rounded-full mr-3"
+          >
+            <ShoppingCartIcon />
+          </Button>
+          <span>
             <User />
-          </div>
+          </span>
         </div>
       </nav>
     </>

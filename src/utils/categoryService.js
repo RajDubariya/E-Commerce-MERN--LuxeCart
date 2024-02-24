@@ -1,13 +1,5 @@
 import axios from "axios";
-import { baseurl } from "./constants";
-import { getUser } from "./userService";
-
-const config = {
-  headers: {
-    Authorization: "Bearer " + getUser()?.token,
-    "Content-Type": "multipart/form-data",
-  },
-};
+import { baseurl, config } from "./constants";
 
 const getCategories = async () => {
   try {
@@ -22,6 +14,5 @@ const getCategories = async () => {
   }
 };
 
-
-
 export { getCategories };
+
