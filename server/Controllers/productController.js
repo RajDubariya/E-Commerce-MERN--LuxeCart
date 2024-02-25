@@ -173,6 +173,22 @@ const getProductBySeller = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+const suggestProductOnQuery = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    const suggestions = await Product.find({
+      name: { $regex: new RegExp(query, "i") },
+    });
+
+    res.status(200).json(suggestions);
+  } catch (error) {
+    console.error(`error while suggesting products based on query`);
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
 export {
   createProduct,
   getProducts,
@@ -181,4 +197,5 @@ export {
   getProductBySeller,
   deleteProduct,
   updateProductDetails,
+  suggestProductOnQuery,
 };

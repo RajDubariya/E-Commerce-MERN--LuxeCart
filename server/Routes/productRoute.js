@@ -7,6 +7,7 @@ import {
   getProductBySeller,
   getProducts,
   rateProduct,
+  suggestProductOnQuery,
   updateProductDetails,
 } from "../Controllers/productController.js";
 
@@ -31,5 +32,6 @@ productRoute.get(
   authenticateToken,
   getProductBySeller
 );
+productRoute.get("/suggestproduct", authenticateToken, suggestProductOnQuery);
 
 export { productRoute };

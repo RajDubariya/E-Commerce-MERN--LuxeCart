@@ -114,6 +114,22 @@ const updateProduct = async (productId, updateProductDetails) => {
     return error;
   }
 };
+
+const getProductSuggestionOnSearch = async (query) => {
+  try {
+    const response = await axios.get(
+      `${baseurl}/products/suggestproduct?query=${query}`,
+      config
+    );
+
+    return response.data;
+  } catch (error) {
+    console.log(
+      "error while fetching product suggestion on search (Client)" + error
+    );
+    return error;
+  }
+};
 export {
   createProduct,
   getProducts,
@@ -123,4 +139,5 @@ export {
   getProductBySeller,
   deleteProduct,
   updateProduct,
+  getProductSuggestionOnSearch,
 };
