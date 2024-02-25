@@ -29,18 +29,16 @@ const Cart = () => {
             <CartItemCard items={cart?.items} getCart={getCart} />
           </div>
 
-          <div className="md:w-[15%] p-4 border h-fit rounded-md shadow-md">
-            <p className="text-xl font-semibold">
-              Total Items :{cart?.items.length}
-            </p>
-            <p className="text-xl font-semibold">
+          <div className="md:w-[15%] p-4 border h-fit rounded-md shadow-md text-md md:text-sm lg:text-md xl:text-xl">
+            <p>Total Items :{cart?.items.length}</p>
+            <Separator className="my-1" />
+            <p>
               Subtotal : <sup>₹</sup>
               {cart?.totalPrice}
             </p>
-            <p className="text-xl font-semibold my-1">
-              Total Quantity : {cart?.totalQuantity}
-            </p>
-            <Separator className="my-3" />
+            <Separator className="my-1" />
+            <p>Total Quantity : {cart?.totalQuantity}</p>
+            <Separator className="my-1 mb-3" />
             <Button className="capitalize w-full">proceed to buy</Button>
           </div>
         </div>

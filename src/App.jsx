@@ -9,6 +9,7 @@ import ProductByCategory from "./components/custom_components/ProductsByCategory
 import { getUser } from "./utils/userService";
 import Navbar from "./components/custom_components/Navbar";
 import Cart from "./components/custom_components/Cart";
+import UpdateUserForm from "./components/custom_components/UpdateUserForm";
 
 function App() {
   const user = getUser();
@@ -37,6 +38,7 @@ function App() {
         <Route path="/product/:productId" element={<Product />} />
         <Route path="/category/:category" element={<ProductByCategory />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/updatedetails" element={<UpdateUserForm />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>

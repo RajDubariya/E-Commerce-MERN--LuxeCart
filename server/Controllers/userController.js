@@ -106,4 +106,69 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser };
+const updateUserDetails = async (req, res) => {
+  try {
+    const { phone, name, email, address, password } = req.body;
+    const user = await User.findOne({ phone: phone });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ error: "user not found with this phone number" });
+    }
+
+    if (email && !validator.isEmail(email)) {
+      return res
+        .status(400)
+        .json({ message: "Please enter valid email address" });
+    }
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (address) {
+      user.address.street =
+        address.street !== "" ? address.street : user.address.street;
+      user.address.city =
+        address.city !== "" ? address.city : user.address.city;
+      user.address.state =
+        address.state !== "" ? address.state : user.address.state;
+      user.address.zipCode =
+        address.zipCode !== "" ? address.zipCode : user.address.zipCode;
+    }
+
+    if (password && password !== "") {
+      const salt = await bcrypt.genSalt(10);
+      const securePassword = await bcrypt.hash(password, salt);
+
+      user.password = securePassword;
+    }
+
+    const updatedUser = await user.save({ new: true });
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error(`error updating user`);
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+
+const getUser = async (req, res) => {
+  try {
+    const { phone } = req.params;
+
+    const user = await User.findOne({ phone: phone });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ error: "user not found with this phone number" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(`error getting user`);
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+
+export { registerUser, loginUser, updateUserDetails, getUser };

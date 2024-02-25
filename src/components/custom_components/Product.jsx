@@ -248,7 +248,7 @@ const Product = () => {
               </Button>
             </div>
 
-            {user?.isSeller && product?.seller !== user?.userId && (
+            {product?.seller !== user?.userId && (
               <>
                 {isAddedToCart ? (
                   <Button disabled className="bg-green-600 ">

@@ -2,7 +2,11 @@ import { getUser } from "@/utils/userService";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
 import { Separator } from "../ui/separator";
 
 const User = () => {
@@ -13,19 +17,20 @@ const User = () => {
     localStorage.removeItem("User");
     navigate("/");
   };
-
+  const handleClick = () => {
+    navigate("/updatedetails");
+  };
   return (
     <>
-      <Popover>
-        <PopoverTrigger>
+      <HoverCard>
+        <HoverCardTrigger onClick={handleClick} className="cursor-pointer">
           <Avatar>
-            {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
             <AvatarFallback>
               {user?.name.substring(0, 1).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-        </PopoverTrigger>
-        <PopoverContent>
+        </HoverCardTrigger>
+        <HoverCardContent>
           <div>
             <span className="flex items-center justify-between px-2">
               <p>Name</p>
@@ -53,8 +58,8 @@ const User = () => {
               </Button>
             </span>
           </div>
-        </PopoverContent>
-      </Popover>
+        </HoverCardContent>
+      </HoverCard>
     </>
   );
 };

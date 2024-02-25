@@ -41,7 +41,7 @@ const Navbar = () => {
           <Button
             onClick={() => navigate("/cart")}
             variant="outline"
-            className="p-2 rounded-full mr-3"
+            className="p-2 rounded-full mr-5"
           >
             <ShoppingCartIcon />
           </Button>

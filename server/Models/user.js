@@ -20,6 +20,24 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  address: {
+    street: {
+      type: String,
+      default: "",
+    },
+    city: {
+      type: String,
+      default: "",
+    },
+    state: {
+      type: String,
+      default: "",
+    },
+    zipCode: {
+      type: String,
+      default: "",
+    },
+  },
 });
 
 const User = mongoose.model("User", UserSchema);

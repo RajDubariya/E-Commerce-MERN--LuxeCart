@@ -9,7 +9,8 @@ import { productRoute } from "./Routes/productRoute.js";
 import { categoryRoute } from "./Routes/categoryRoute.js";
 import { cartRoute } from "./Routes/cartRoute.js";
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT;
+
 const app = express();
 
 // Database connection
