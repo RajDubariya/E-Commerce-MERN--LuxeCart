@@ -25,53 +25,60 @@ const Navbar = () => {
     const response = await getProductSuggestionOnSearch(query);
     setSuggestedProducts(response);
   };
+
   useEffect(() => {
     if (query.trim() !== "") {
       fetchProducts();
     }
   }, [query]);
 
-  console.log(suggestedProducts);
   return (
     <>
       <nav className="border-b p-3 px-6 flex items-center justify-between">
         <Logo />
-        <div className="flex items-center w-[40%] relative">
-          <Input
-            type="text"
-            placeholder="Search Product ..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          {suggestedProducts.length > 0 && (
-            <div className="absolute top-full w-full bg-white border rounded-md mt-2 shadow-md z-50">
-              {suggestedProducts?.map((product) => (
-                <>
-                  <div
-                    key={product._id}
-                    className="p-3 cursor-pointer hover:bg-gray-100 flex"
-                    onClick={() => {
-                      navigate(`/product/${product._id}`);
-                    }}
-                  >
-                    <div className="w-[20%]">
-                      <img
-                        className=" mix-blend-multiply h-[5rem]"
-                        src={product.imageurl}
-                        alt={product.name}
-                      />
-                    </div>
-                    <div>
-                      <p>{product.name}</p>
-                      <p>Brand : {product.brand}</p>
-                    </div>
-                  </div>
 
-                  <Separator />
+        <div className="flex items-center w-[30%]">
+          <HoverCard>
+            <HoverCardTrigger className="w-full">
+              <Input
+                type="text"
+                placeholder="Search Product ..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </HoverCardTrigger>
+            <HoverCardContent className=" w-[28rem] p-2">
+              {suggestedProducts.length > 0 && (
+                <>
+                  {suggestedProducts?.map((product) => (
+                    <>
+                      <div
+                        key={product?._id}
+                        className="w-full p-2 rounded-md cursor-pointer hover:bg-gray-50 flex"
+                        onClick={() => {
+                          navigate(`/product/${product._id}`);
+                        }}
+                      >
+                        <div className="w-[20%]">
+                          <img
+                            className=" mix-blend-multiply h-[5rem]"
+                            src={product.imageurl}
+                            alt={product.name}
+                          />
+                        </div>
+                        <div>
+                          <p>{product.name}</p>
+                          <p>Brand : {product.brand}</p>
+                        </div>
+                      </div>
+
+                      <Separator />
+                    </>
+                  ))}
                 </>
-              ))}
-            </div>
-          )}
+              )}
+            </HoverCardContent>
+          </HoverCard>
         </div>
         <div className="flex items-center">
           {user?.isSeller ? (

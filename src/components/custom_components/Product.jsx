@@ -53,7 +53,7 @@ const Product = () => {
   };
   useEffect(() => {
     fetchProduct();
-  }, []);
+  }, [productId]);
 
   const renderStars = (product) => {
     const sumOfRatings = product?.ratings?.reduce(

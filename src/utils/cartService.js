@@ -1,5 +1,5 @@
 import axios from "axios";
-import { baseurl, config } from "./constants";
+import { baseurl } from "./constants";
 import { getUser } from "./userService";
 
 const userId = getUser()?.userId;
@@ -53,4 +53,4 @@ const updateCartItemQuantity = async (productId, quantity) => {
     return error;
   }
 };
-export { getUserCart, deleteCartItem, addItemToCart, updateCartItemQuantity };
+export { addItemToCart, deleteCartItem, getUserCart, updateCartItemQuantity };
