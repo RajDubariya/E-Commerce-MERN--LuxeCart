@@ -1,3 +1,4 @@
+import { truncateHeading } from "@/utils/constants";
 import PropTypes from "prop-types";
 import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +28,7 @@ const ProductCard = ({ products }) => {
 
   return (
     <>
-      <div className="grid xl:grid-cols-6 md:grid-cols-3 sm:grid-cols-2 gap-5 p-3 ">
+      <div className="grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-3 ">
         {products?.map((product) => (
           <div
             className="cursor-pointer"
@@ -45,7 +46,7 @@ const ProductCard = ({ products }) => {
 
               <div className="p-3">
                 <h5 className="mb-2 text-lg tracking-wide font-semibold text-gray-900 capitalize">
-                  {product.name}
+                  {truncateHeading(product.name)}
                 </h5>
 
                 <p className="mb-2 text-sm tracking-tight font-normal text-gray-700 ">

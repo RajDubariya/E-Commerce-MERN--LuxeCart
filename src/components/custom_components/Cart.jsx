@@ -1,12 +1,13 @@
 import { getUserCart } from "@/utils/cartService";
 import { useEffect, useState } from "react";
-import CartItemCard from "./CartItems";
-import Navbar from "./Navbar";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import CartItemCard from "./CartItems";
+import Navbar from "./Navbar";
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
+
   const getCart = async () => {
     try {
       const cart = await getUserCart();

@@ -11,6 +11,15 @@ const truncateText = (text) => {
     return shortText;
   }
 };
+const truncateHeading = (text) => {
+  if (text) {
+    let shortText = text.substring(0, 25);
+    if (shortText.length > 20) {
+      shortText = shortText + "...";
+    }
+    return shortText;
+  }
+};
 
 const config = {
   headers: {
@@ -19,4 +28,4 @@ const config = {
   },
 };
 
-export { baseurl, config, truncateText };
+export { baseurl, config, truncateText, truncateHeading };
