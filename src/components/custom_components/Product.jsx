@@ -53,7 +53,7 @@ const Product = () => {
   };
   useEffect(() => {
     fetchProduct();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   const renderStars = (product) => {
@@ -113,7 +113,7 @@ const Product = () => {
   return (
     <>
       <div className="min-h-screen">
-        <Navbar />
+        <Navbar isAddedToCart={isAddedToCart} />
 
         {user?.isSeller && product?.seller === user?.userId ? (
           <div className="flex items-center p-3 justify-end">

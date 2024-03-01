@@ -9,10 +9,11 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../ui/hover-card";
-import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
+import { Separator } from "../ui/separator";
 import Logo from "./Logo";
 import User from "./User";
+import { Turn as Hamburger } from "hamburger-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -20,6 +21,15 @@ const Navbar = () => {
 
   const [query, setQuery] = useState("");
   const [suggestedProducts, setSuggestedProducts] = useState([]);
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
 
   const fetchProducts = async () => {
     const response = await getProductSuggestionOnSearch(query);
@@ -30,6 +40,7 @@ const Navbar = () => {
     if (query.trim() !== "") {
       fetchProducts();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
   return (
@@ -37,7 +48,7 @@ const Navbar = () => {
       <nav className="border-b p-3 px-6 flex items-center justify-between">
         <Logo />
 
-        <div className="flex items-center w-[30%]">
+        <div className="hidden md:flex items-center w-[30%]">
           <HoverCard>
             <HoverCardTrigger className="w-full">
               <Input
@@ -47,7 +58,7 @@ const Navbar = () => {
                 onChange={(e) => setQuery(e.target.value)}
               />
             </HoverCardTrigger>
-            <HoverCardContent className=" w-[28rem] p-2">
+            <HoverCardContent className="w-[28rem] p-2">
               {suggestedProducts.length > 0 && (
                 <>
                   {suggestedProducts?.map((product) => (
@@ -61,7 +72,7 @@ const Navbar = () => {
                       >
                         <div className="w-[20%]">
                           <img
-                            className=" mix-blend-multiply h-[5rem]"
+                            className="mix-blend-multiply h-[5rem]"
                             src={product.imageurl}
                             alt={product.name}
                           />
@@ -80,7 +91,8 @@ const Navbar = () => {
             </HoverCardContent>
           </HoverCard>
         </div>
-        <div className="flex items-center">
+
+        <div className="md:flex hidden items-center">
           {user?.isSeller ? (
             <HoverCard>
               <HoverCardTrigger>
@@ -111,7 +123,94 @@ const Navbar = () => {
             <User />
           </span>
         </div>
+
+        <div className="md:hidden flex items-center">
+          <span onClick={toggleMobileMenu} className="rounded-full">
+            <Hamburger toggled={isMobileMenuOpen} toggle={setMobileMenuOpen} />
+          </span>
+        </div>
       </nav>
+
+      {/* Mobile Menu Section */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden p-4 border-b-2 bg-white flex flex-col items-center">
+          <div className="w-full mb-4">
+            <HoverCard>
+              <HoverCardTrigger className="w-full">
+                <Input
+                  type="text"
+                  placeholder="Search Product ..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+              </HoverCardTrigger>
+              <HoverCardContent className="w-[28rem] p-2">
+                {suggestedProducts.length > 0 && (
+                  <>
+                    {suggestedProducts?.map((product) => (
+                      <>
+                        <div
+                          key={product?._id}
+                          className="w-full p-2 rounded-md cursor-pointer hover:bg-gray-50 flex"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            navigate(`/product/${product._id}`);
+                          }}
+                        >
+                          <div className="w-[20%]">
+                            <img
+                              className="mix-blend-multiply h-[5rem]"
+                              src={product.imageurl}
+                              alt={product.name}
+                            />
+                          </div>
+                          <div>
+                            <p>{product.name}</p>
+                            <p>Brand : {product.brand}</p>
+                          </div>
+                        </div>
+
+                        <Separator />
+                      </>
+                    ))}
+                  </>
+                )}
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+          {user?.isSeller ? (
+            <div className="mb-4">
+              <Button
+                onClick={() => {
+                  closeMobileMenu();
+                  navigate("/seller");
+                }}
+                className="capitalize"
+                variant="outline"
+              >
+                Seller Panel
+              </Button>
+            </div>
+          ) : null}
+
+          <div className="mb-4">
+            <Button
+              onClick={() => {
+                closeMobileMenu();
+                navigate("/cart");
+              }}
+              variant="outline"
+              className="p-2 rounded-full relative"
+            >
+              <ShoppingCartIcon />
+            </Button>
+          </div>
+
+          <div>
+            <User />
+          </div>
+        </div>
+      )}
     </>
   );
 };

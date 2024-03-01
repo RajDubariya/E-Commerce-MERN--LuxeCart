@@ -31,7 +31,7 @@ const Cart = () => {
           </div>
 
           <div className="md:w-[15%] p-4 border h-fit rounded-md shadow-md text-md md:text-sm lg:text-md xl:text-xl">
-            <p>Total Items :{cart?.items.length}</p>
+            <p>Total Items : {cart?.items.length}</p>
             <Separator className="my-1" />
             <p>
               Subtotal : <sup>₹</sup>
