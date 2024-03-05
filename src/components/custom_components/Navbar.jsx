@@ -1,5 +1,5 @@
 import { getProductSuggestionOnSearch } from "@/utils/productService";
-import { getUser } from "@/utils/userService";
+import { getUser, removeUser } from "@/utils/userService";
 import { ShoppingCartIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +23,10 @@ const Navbar = () => {
   const [suggestedProducts, setSuggestedProducts] = useState([]);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const logout = () => {
+    removeUser();
+    navigate("/");
+  };
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -44,8 +48,8 @@ const Navbar = () => {
   }, [query]);
 
   return (
-    <>
-      <nav className="border-b p-3 px-6 flex items-center justify-between">
+    <div className="p-4">
+      <nav className="border border-gray-300 bg-white  rounded-full p-3 px-6 flex items-center justify-between">
         <Logo />
 
         <div className="hidden md:flex items-center w-[30%]">
@@ -133,7 +137,7 @@ const Navbar = () => {
 
       {/* Mobile Menu Section */}
       {isMobileMenuOpen && (
-        <div className="md:hidden p-4 border-b-2 bg-white flex flex-col items-center">
+        <div className="md:hidden p-4 border mt-3 rounded-lg flex flex-col items-center">
           <div className="w-full mb-4">
             <HoverCard>
               <HoverCardTrigger className="w-full">
@@ -206,12 +210,14 @@ const Navbar = () => {
             </Button>
           </div>
 
-          <div>
-            <User />
-          </div>
+          <User />
+
+          <Button className="w-[50%] mt-4" onClick={logout}>
+            Logout
+          </Button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 import { truncateHeading } from "@/utils/constants";
+import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
@@ -28,12 +29,15 @@ const ProductCard = ({ products }) => {
 
   return (
     <>
-      <div className="grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-3 ">
+      <div className="grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 px-6 py-3 ">
         {products?.map((product) => (
-          <div
+          <motion.div
             className="cursor-pointer"
             key={product._id}
             onClick={() => handleClick(product?._id)}
+            initial={{ scale: 0.9, opacity: 0.8 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6 }}
           >
             <div className="bg-white border border-gray-200 rounded-md shadow-md p-2">
               <div className=" flex justify-center items-center p-3">
@@ -65,7 +69,7 @@ const ProductCard = ({ products }) => {
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </>

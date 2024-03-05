@@ -1,4 +1,4 @@
-import { getUser } from "@/utils/userService";
+import { getUser, removeUser } from "@/utils/userService";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -14,7 +14,7 @@ const User = () => {
   const user = getUser();
 
   const logout = () => {
-    localStorage.removeItem("User");
+    removeUser();
     navigate("/");
   };
   const handleClick = () => {

@@ -1,3 +1,4 @@
+import { addItemToCart } from "@/utils/cartService";
 import {
   deleteProduct,
   getProductById,
@@ -25,7 +26,7 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import Navbar from "./Navbar";
 import Spinner from "./Spinner";
-import { addItemToCart } from "@/utils/cartService";
+import { motion } from "framer-motion";
 
 const Product = () => {
   const navigate = useNavigate();
@@ -196,7 +197,14 @@ const Product = () => {
 
         <div className="grid md:grid-cols-2 gap-10 p-10">
           <div className="flex justify-center">
-            <img className="h-[400px]" src={product?.imageurl} alt="" />
+            <motion.img
+              className="h-[400px]"
+              src={product?.imageurl}
+              alt={product?.name}
+              initial={{ scale: 0.9, opacity: 0.8 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+            />
           </div>
 
           <div className="mt-5 md:mt-0">

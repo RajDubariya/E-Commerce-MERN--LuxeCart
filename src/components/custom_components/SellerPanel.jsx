@@ -34,13 +34,10 @@ const SellerPanel = () => {
   const [categories, setCategories] = useState([]);
   const [sellerProducts, setSellerProducts] = useState([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const response = await getCategories();
-      setCategories(response);
-    };
-    fetchCategories();
-  }, []);
+  const fetchCategories = async () => {
+    const response = await getCategories();
+    setCategories(response);
+  };
 
   const fetchProducts = async () => {
     const response = await getProductBySeller();
@@ -49,6 +46,7 @@ const SellerPanel = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
   const handleImageChange = (e) => {
