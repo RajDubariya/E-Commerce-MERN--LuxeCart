@@ -2,7 +2,6 @@ import { getProductsByCategory } from "@/utils/productService";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import Navbar from "./Navbar";
 
 const ProductsByCategory = () => {
   const { category } = useParams();
@@ -19,12 +18,18 @@ const ProductsByCategory = () => {
     } catch (error) {
       console.error(error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      <Navbar />
-      <ProductCard products={products} />
+      <div className="p-3">
+        <div className="text-2xl pb-3 font-semibold flex">
+          <p>Product /</p>
+          <p className="ml-2 text-slate-400">{category}</p>
+        </div>
+        <ProductCard products={products} />
+      </div>
     </>
   );
 };

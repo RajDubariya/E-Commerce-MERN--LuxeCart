@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import CartItemCard from "./CartItems";
-import Navbar from "./Navbar";
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
@@ -22,7 +21,6 @@ const Cart = () => {
 
   return (
     <>
-      <Navbar />
       <p className="ml-3 mt-2 text-2xl font-semibold">Your Cart</p>
       {cart?.items?.length > 0 ? (
         <div className="flex md:flex-row flex-col p-3 gap-3">

@@ -14,7 +14,6 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Input } from "../ui/input";
-import Navbar from "./Navbar";
 import Spinner from "./Spinner";
 
 const UpdateUserForm = () => {
@@ -66,7 +65,6 @@ const UpdateUserForm = () => {
 
   return (
     <>
-      <Navbar />
       <div className="w-full flex flex-col items-center justify-center p-4 relative h-[90vh]">
         <Card className="w-full lg:w-[80%] xl:w-[60%]">
           <CardHeader>

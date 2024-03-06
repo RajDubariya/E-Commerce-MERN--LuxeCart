@@ -30,9 +30,11 @@ const ProductSchema = new Schema({
   ratings: {
     type: [
       {
-        type: Number,
-        min: 0,
-        max: 5,
+        postedby: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        rating: { type: Number, min: 0, max: 5 },
       },
     ],
     default: [],

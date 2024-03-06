@@ -132,7 +132,7 @@ const getProductById = async (req, res) => {
 const rateProduct = async (req, res) => {
   try {
     const { productId } = req.params;
-    let { rating } = req.body;
+    let { rating, postedby } = req.body;
     rating = Number(rating);
 
     if (rating < 0 || rating > 5) {
@@ -142,7 +142,7 @@ const rateProduct = async (req, res) => {
     const product = await Product.findByIdAndUpdate(
       productId,
       {
-        $push: { ratings: rating },
+        $push: { ratings: { rating, postedby } },
         $inc: { numberOfRatings: 1 },
       },
       { new: true }

@@ -48,8 +48,8 @@ const Navbar = () => {
   }, [query]);
 
   return (
-    <div className="p-4">
-      <nav className="border border-gray-300 bg-white  rounded-full p-3 px-6 flex items-center justify-between">
+    <div className="px-4 py-3">
+      <nav className="border border-slate-300 bg-white  rounded-full p-3 px-6 flex items-center justify-between">
         <Logo />
 
         <div className="hidden md:flex items-center w-[30%]">
@@ -60,6 +60,7 @@ const Navbar = () => {
                 placeholder="Search Product ..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                className="border border-slate-300"
               />
             </HoverCardTrigger>
             <HoverCardContent className="w-[28rem] p-2">
@@ -146,6 +147,7 @@ const Navbar = () => {
                   placeholder="Search Product ..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
+                  className="border border-slate-300"
                 />
               </HoverCardTrigger>
               <HoverCardContent className="w-[28rem] p-2">

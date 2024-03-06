@@ -1,7 +1,7 @@
 import { getProducts } from "@/utils/productService";
 import { useEffect, useState } from "react";
+import CategoryFilter from "./CategoryFilter";
 import ProductCard from "./ProductCard";
-import Navbar from "./Navbar";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -18,10 +18,16 @@ const Home = () => {
     }
   }, []);
   return (
-    <>
-      <Navbar />
-      <ProductCard products={products} />
-    </>
+    <div className="flex p-3">
+      <div>
+        <p className="pb-2 text-xl font-medium">Categories :</p>
+        <CategoryFilter />
+      </div>
+      <div className="ml-4">
+        <p className="pb-2 text-xl font-medium">Featured Products :</p>
+        <ProductCard products={products} />
+      </div>
+    </div>
   );
 };
 

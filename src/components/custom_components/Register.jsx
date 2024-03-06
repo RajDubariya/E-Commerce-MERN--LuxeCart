@@ -143,7 +143,7 @@ const Register = () => {
               </Button>
             ) : (
               <Button className="w-full" onClick={handleSubmit}>
-                Login
+                Sign Up
               </Button>
             )}
           </CardFooter>

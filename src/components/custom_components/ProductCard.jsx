@@ -8,10 +8,10 @@ const ProductCard = ({ products }) => {
   const navigate = useNavigate();
 
   const renderStars = (product) => {
-    const sumOfRatings = product?.ratings.reduce(
-      (total, rating) => total + rating,
-      0
-    );
+    const sumOfRatings = product?.ratings?.reduce((total, ratingobj) => {
+      const rating = ratingobj?.rating;
+      return total + rating;
+    }, 0);
 
     const avgRating = Math.floor(sumOfRatings / product?.numberOfRatings);
     const stars = [];
@@ -29,17 +29,17 @@ const ProductCard = ({ products }) => {
 
   return (
     <>
-      <div className="grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 px-6 py-3 ">
+      <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5">
         {products?.map((product) => (
           <motion.div
-            className="cursor-pointer"
+            className="cursor-pointer bg-white border border-slate-300/80 rounded-md shadow-md shadow-slate-300/50"
             key={product._id}
             onClick={() => handleClick(product?._id)}
             initial={{ scale: 0.9, opacity: 0.8 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="bg-white border border-gray-200 rounded-md shadow-md p-2">
+            <div className=" p-2">
               <div className=" flex justify-center items-center p-3">
                 <img
                   src={product.imageurl}

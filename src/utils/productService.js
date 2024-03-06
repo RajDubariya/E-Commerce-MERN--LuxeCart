@@ -2,6 +2,7 @@ import axios from "axios";
 import { baseurl, config } from "./constants";
 import { getUser } from "./userService";
 
+const userId = getUser()?.userId;
 const createProduct = async (productDetails) => {
   try {
     const formData = new FormData();
@@ -11,7 +12,7 @@ const createProduct = async (productDetails) => {
     formData.append("brand", productDetails.brand);
     formData.append("category", productDetails.category);
     formData.append("image", productDetails.image);
-    formData.append("seller", getUser()?.userId);
+    formData.append("seller", userId);
 
     const response = await axios.post(
       `${baseurl}/products/createproduct`,
@@ -53,9 +54,10 @@ const rateProduct = async (id, rating) => {
   try {
     const response = await axios.put(
       `${baseurl}/products/rateproduct/${id}`,
-      { rating },
+      { rating, postedby: userId },
       config
     );
+    console.log(response.data);
     return response;
   } catch (error) {
     console.log("error while rating product (Client)" + error);
@@ -78,7 +80,7 @@ const getProductsByCategory = async (category) => {
 const getProductBySeller = async () => {
   try {
     const response = await axios.get(
-      `${baseurl}/products/getproducts/${getUser()?.userId}`,
+      `${baseurl}/products/getproducts/${userId}`,
       config
     );
     return response.data;
