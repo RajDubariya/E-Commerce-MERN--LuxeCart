@@ -49,11 +49,13 @@ const CartItemCard = ({ items, getCart }) => {
                   />
                 </div>
                 <div className="p-3">
-                  <h5 className="text-lg tracking-wide font-semibold text-gray-900 capitalize">
+                  <h5 className="text-lg tracking-wide font-semibold text-slate-500 capitalize">
                     {item.productId.name}
                   </h5>
-                  <p>{truncateText(item.productId.description)}</p>
-                  <p className="my-2 text-sm tracking-tight font-normal text-gray-700 ">
+                  <p className="text-slate-600">
+                    {truncateText(item.productId.description)}
+                  </p>
+                  <p className="my-2 text-sm tracking-tight font-normal text-slate-500  ">
                     <sup>₹</sup>
                     {item.productId.price}
                   </p>

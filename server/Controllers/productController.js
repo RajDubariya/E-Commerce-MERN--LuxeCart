@@ -118,8 +118,10 @@ const getProductById = async (req, res) => {
   try {
     const { productId } = req.params;
     const product = await Product.findById(productId).populate({
-      path: "category",
+      path: "category ratings.postedby",
+      select: "name",
     });
+    product.populate("ratings.postedby", "name");
 
     res.status(200).json(product);
   } catch (error) {
@@ -132,17 +134,28 @@ const getProductById = async (req, res) => {
 const rateProduct = async (req, res) => {
   try {
     const { productId } = req.params;
-    let { rating, postedby } = req.body;
+    let { rating, postedby, review } = req.body;
     rating = Number(rating);
 
     if (rating < 0 || rating > 5) {
       return res.status(400).json({ error: "Invalid rating value" });
     }
 
+    // const existingRating = await Product.findOne({
+    //   _id: productId,
+    //   "ratings.postedby": postedby,
+    // });
+
+    // if (existingRating) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "You have already rated this product !!" });
+    // }
+
     const product = await Product.findByIdAndUpdate(
       productId,
       {
-        $push: { ratings: { rating, postedby } },
+        $push: { ratings: { rating, postedby, review } },
         $inc: { numberOfRatings: 1 },
       },
       { new: true }

@@ -26,6 +26,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import Spinner from "./Spinner";
+import ProductReviews from "./ProductReviews";
 
 const Product = () => {
   const navigate = useNavigate();
@@ -33,11 +34,13 @@ const Product = () => {
   const [rating, setRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
+  const [review, setReview] = useState("");
   const [updateProductDetails, setUpdateProductDetails] = useState({
     name: "",
     price: "",
     description: "",
   });
+
   const { productId } = useParams();
 
   const user = getUser();
@@ -78,17 +81,20 @@ const Product = () => {
     setIsLoading(true);
 
     try {
-      const userRating = product.ratings.find(
-        (rating) => rating.postedby === user.userId
-      );
+      await rateProduct(id, rating, review);
+      setReview("");
+      setRating(0);
+      // After successfully rating, fetch the product again
+      await fetchProduct();
+      // const userRating = product.ratings.find(
+      //   (rating) => rating.postedby === user.userId
+      // );
 
-      if (userRating) {
-        alert("You have already rated this product");
-      } else {
-        await rateProduct(id, rating);
-        // After successfully rating, fetch the product again
-        await fetchProduct();
-      }
+      // if (userRating) {
+      //   alert("You have already rated this product");
+      // } else {
+
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -214,28 +220,28 @@ const Product = () => {
         </div>
 
         <div className="mt-5 md:mt-0">
-          <h1 className="text-4xl font-semibold tracking-wider capitalize">
+          <h1 className="text-4xl font-semibold text-slate-500 tracking-wider capitalize">
             {product?.name}
           </h1>
           <p className="my-2 text-xl font-normal text-gray-700 ">
             <sup>₹</sup>
             {product?.price}
           </p>
-          <div className="md:w-[70%] py-2 tracking-wide">
+          <div className="md:w-[70%] py-2 tracking-wide text-slate-600 ">
             <p>{product?.description}</p>
           </div>
           <p className="py-1 font-semibold">Brand : {product?.brand}</p>
           <div className="py-1 text-sm flex items-center">
             <p>Category : </p>
             <Badge
-              onClick={() => navigate(`/category/${product?.category.name}`)}
+              onClick={() => navigate(`/category/${product.category?.name}`)}
               variant="secondary"
               className=" cursor-pointer"
             >
               {product?.category.name}
             </Badge>
           </div>
-          <div className="flex items-center py-1">
+          <div className="flex items-center py-2">
             {product?.numberOfRatings > 0 ? (
               renderStars(product)
             ) : (
@@ -245,30 +251,38 @@ const Product = () => {
           </div>
           {/* rating */}
           {!(user.userId === product?.seller) && (
-            <div className="flex capitalize items-center py-2 mb-2">
-              <p>rate this product : </p>
-              <input
-                className="w-[8%] border rounded-md border-gray-200 p-1 ml-2"
-                defaultValue={0}
-                type="number"
-                min="0"
-                max="5"
-                onChange={(e) => setRating(e.target.value)}
-              />
-
-              <Button
-                onClick={() => handleRateClick(product?._id)}
-                size="sm"
-                className="ml-2"
-              >
-                {isLoading ? <Spinner /> : "Rate"}
-              </Button>
+            <div className="flex flex-col capitalize justify-center py-2">
+              <div className="flex">
+                <p>rate this product : </p>
+                <input
+                  className="w-[8%] border rounded-md border-gray-200 p-1 ml-2"
+                  defaultValue={0}
+                  type="number"
+                  min="0"
+                  max="5"
+                  onChange={(e) => setRating(e.target.value)}
+                  value={rating}
+                />
+              </div>
+              <div className="py-3">
+                <Textarea
+                  onChange={(e) => setReview(e.target.value)}
+                  placeholder="Your Honest Review ..."
+                  value={review}
+                />
+                <Button
+                  onClick={() => handleRateClick(product?._id)}
+                  className="mt-3"
+                >
+                  {isLoading ? <Spinner /> : "Rate"}
+                </Button>
+              </div>
             </div>
           )}
 
           {/* rating */}
           {product?.seller !== user?.userId && (
-            <div className="mt-2">
+            <div>
               {isAddedToCart ? (
                 <Button disabled className="bg-green-600 ">
                   <Check />
@@ -283,6 +297,7 @@ const Product = () => {
           )}
         </div>
       </div>
+      <ProductReviews product={product} />
     </>
   );
 };

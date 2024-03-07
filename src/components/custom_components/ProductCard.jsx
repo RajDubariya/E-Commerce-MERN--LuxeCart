@@ -49,7 +49,7 @@ const ProductCard = ({ products }) => {
               </div>
 
               <div className="p-3">
-                <h5 className="mb-2 text-lg tracking-wide font-semibold text-gray-900 capitalize">
+                <h5 className="mb-2 text-lg tracking-wide font-semibold text-slate-500  capitalize">
                   {truncateHeading(product.name)}
                 </h5>
 

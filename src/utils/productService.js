@@ -50,11 +50,11 @@ const getProductById = async (productId) => {
   }
 };
 
-const rateProduct = async (id, rating) => {
+const rateProduct = async (id, rating, review) => {
   try {
     const response = await axios.put(
       `${baseurl}/products/rateproduct/${id}`,
-      { rating, postedby: userId },
+      { rating, postedby: userId, review },
       config
     );
     console.log(response.data);

@@ -16,16 +16,20 @@ const ProductSchema = new Schema({
   },
   imageurl: {
     type: String,
+    required: true,
   },
   description: {
     type: String,
+    required: true,
   },
   brand: {
     type: String,
+    required: true,
   },
   seller: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
   },
   ratings: {
     type: [
@@ -35,6 +39,7 @@ const ProductSchema = new Schema({
           ref: "User",
         },
         rating: { type: Number, min: 0, max: 5 },
+        review: { type: String },
       },
     ],
     default: [],
