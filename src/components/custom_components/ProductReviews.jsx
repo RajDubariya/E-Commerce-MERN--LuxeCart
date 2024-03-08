@@ -21,7 +21,7 @@ function ProductReviews({ product }) {
         <div className="p-4 grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-5">
           {ratingsArray?.map((rating) => (
             <div
-              key={rating._id}
+              key={rating?._id}
               className="border border-slate-300 p-3 px-5 capitalize rounded-md shadow-md"
             >
               <p className="text-xl text-slate-400">{rating.postedby?.name}</p>

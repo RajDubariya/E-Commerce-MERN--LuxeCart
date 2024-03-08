@@ -7,6 +7,7 @@ import {
   getProductBySeller,
   getProducts,
   rateProduct,
+  similarProducts,
   suggestProductOnQuery,
   updateProductDetails,
 } from "../Controllers/productController.js";
@@ -33,5 +34,6 @@ productRoute.get(
   getProductBySeller
 );
 productRoute.get("/suggestproduct", authenticateToken, suggestProductOnQuery);
+productRoute.get("/similar/:productId", authenticateToken, similarProducts);
 
 export { productRoute };

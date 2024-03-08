@@ -132,6 +132,19 @@ const getProductSuggestionOnSearch = async (query) => {
     return error;
   }
 };
+
+const similarProducts = async (productId) => {
+  try {
+    const response = await axios.get(
+      `${baseurl}/products/similar/${productId}`,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.log("error while fetching similar products (Client)" + error);
+    return error;
+  }
+};
 export {
   createProduct,
   getProducts,
@@ -142,4 +155,5 @@ export {
   deleteProduct,
   updateProduct,
   getProductSuggestionOnSearch,
+  similarProducts,
 };

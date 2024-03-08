@@ -74,14 +74,14 @@ const SellerPanel = () => {
 
   return (
     <>
-      <div className="w-full h-fit relative">
+      <div className="w-full h-fit">
         <p className="ml-3 mt-2 text-2xl font-semibold">Your Products</p>
-        <div className="p-3">
+        <div className="p-3 grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5">
           <ProductCard products={sellerProducts} />
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <div className="absolute bottom-[-14rem] right-10 border border-gray-300 rounded-full p-2.5 cursor-pointer flex items-center justify-center">
+            <div className="fixed bottom-5 right-5 border border-gray-300 rounded-full p-2.5 cursor-pointer flex items-center justify-center">
               <PlusIcon className="h-9 w-9" />
             </div>
           </DialogTrigger>

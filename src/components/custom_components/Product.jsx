@@ -27,6 +27,7 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import Spinner from "./Spinner";
 import ProductReviews from "./ProductReviews";
+import SimilarProducts from "./SimilarProducts";
 
 const Product = () => {
   const navigate = useNavigate();
@@ -81,20 +82,19 @@ const Product = () => {
     setIsLoading(true);
 
     try {
-      await rateProduct(id, rating, review);
-      setReview("");
-      setRating(0);
-      // After successfully rating, fetch the product again
-      await fetchProduct();
-      // const userRating = product.ratings.find(
-      //   (rating) => rating.postedby === user.userId
-      // );
+      const userRating = product.ratings.find(
+        (rating) => rating.postedby === user.userId
+      );
 
-      // if (userRating) {
-      //   alert("You have already rated this product");
-      // } else {
-
-      // }
+      if (userRating) {
+        alert("You have already rated this product");
+      } else {
+        await rateProduct(id, rating, review);
+        setReview("");
+        setRating(0);
+        // After successfully rating, fetch the product again
+        await fetchProduct();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -159,6 +159,7 @@ const Product = () => {
                         name: e.target.value,
                       })
                     }
+                    value={updateProductDetails.name}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -173,6 +174,7 @@ const Product = () => {
                         price: e.target.value,
                       })
                     }
+                    value={updateProductDetails.price}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -298,6 +300,7 @@ const Product = () => {
         </div>
       </div>
       <ProductReviews product={product} />
+      <SimilarProducts productId={productId} />
     </>
   );
 };

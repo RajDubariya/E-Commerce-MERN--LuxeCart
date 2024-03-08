@@ -25,7 +25,9 @@ const Home = () => {
       </div>
       <div className="ml-4">
         <p className="pb-2 text-xl font-medium">Featured Products :</p>
-        <ProductCard products={products} />
+        <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5">
+          <ProductCard products={products} />
+        </div>
       </div>
     </div>
   );
