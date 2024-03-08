@@ -1,7 +1,7 @@
 import { getProducts } from "@/utils/productService";
 import { useEffect, useState } from "react";
-import CategoryFilter from "./CategoryFilter";
-import ProductCard from "./ProductCard";
+import CategoryFilter from "./Product/CategoryFilter";
+import ProductCard from "./Product/ProductCard";
 
 const Home = () => {
   const [products, setProducts] = useState([]);

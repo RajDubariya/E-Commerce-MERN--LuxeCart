@@ -1,13 +1,13 @@
 import { getUser, removeUser } from "@/utils/userService";
 import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Button } from "../ui/button";
+import { Avatar, AvatarFallback } from "../../ui/avatar";
+import { Button } from "../../ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "../ui/hover-card";
-import { Separator } from "../ui/separator";
+} from "../../ui/hover-card";
+import { Separator } from "../../ui/separator";
 
 const User = () => {
   const navigate = useNavigate();

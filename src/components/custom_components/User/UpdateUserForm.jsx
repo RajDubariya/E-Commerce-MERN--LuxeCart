@@ -3,8 +3,8 @@ import { getUser } from "@/utils/userService";
 import { AlertCircle, Check } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Button } from "../ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../../ui/alert";
+import { Button } from "../../ui/button";
 import {
   Card,
   CardContent,
@@ -12,9 +12,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Input } from "../ui/input";
-import Spinner from "./Spinner";
+} from "../../ui/card";
+import { Input } from "../../ui/input";
+import Spinner from "../Spinner";
 
 const UpdateUserForm = () => {
   const navigate = useNavigate();

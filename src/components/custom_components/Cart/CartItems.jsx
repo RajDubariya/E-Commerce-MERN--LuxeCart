@@ -3,7 +3,7 @@ import { truncateText } from "@/utils/constants";
 import { Trash } from "lucide-react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useState } from "react";
 
 const CartItemCard = ({ items, getCart }) => {

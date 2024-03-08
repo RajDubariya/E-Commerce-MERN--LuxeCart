@@ -1,7 +1,7 @@
 import { getUserCart } from "@/utils/cartService";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
+import { Button } from "../../ui/button";
+import { Separator } from "../../ui/separator";
 import CartItemCard from "./CartItems";
 
 const Cart = () => {

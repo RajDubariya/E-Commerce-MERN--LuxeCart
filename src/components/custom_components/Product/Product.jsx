@@ -11,8 +11,8 @@ import { Check, ShoppingCart, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import { Badge } from "../../ui/badge";
+import { Button } from "../../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -21,11 +21,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
-import Spinner from "./Spinner";
+} from "../../ui/dialog";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Textarea } from "../../ui/textarea";
+import Spinner from "../Spinner";
 import ProductReviews from "./ProductReviews";
 import SimilarProducts from "./SimilarProducts";
 

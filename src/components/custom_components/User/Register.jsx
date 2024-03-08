@@ -1,11 +1,9 @@
-import { setUser } from "@/redux/reducers/authReducer";
-import { login } from "@/utils/authService";
+import { signUp } from "@/utils/authService";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Button } from "../ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../../ui/alert";
+import { Button } from "../../ui/button";
 import {
   Card,
   CardContent,
@@ -13,42 +11,47 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Input } from "../ui/input";
-import Logo from "./Logo";
-import Spinner from "./Spinner";
+} from "../../ui/card";
+import { Checkbox } from "../../ui/checkbox";
+import { Input } from "../../ui/input";
+import Logo from "../Logo";
+import Spinner from "../Spinner";
 
-function Login() {
+const Register = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [credentials, setCredentials] = useState({ phone: "", password: "" });
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const [credentials, setCredentials] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    password: "",
+    isSeller: false,
+  });
+
+  const handleSubmit = async () => {
     try {
       setIsLoading(true);
       if (credentials.password !== confirmPassword) {
-        setError("Passwords do not match");
         setIsLoading(false);
+        setError("Passwords do not match");
         return;
       }
-      const response = await login(credentials);
+      const response = await signUp(credentials);
 
       if (response.status !== 200) {
         setError(response);
         setIsLoading(false);
       }
       if (response.status === 200) {
-        localStorage.setItem("User", JSON.stringify(response.data));
-        navigate("/home");
+        navigate("/");
       }
 
-      dispatch(setUser(response.data));
       setIsLoading(false);
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("error during regestring:", error);
       setIsLoading(false);
     }
   };
@@ -59,12 +62,22 @@ function Login() {
         <span className="absolute top-[3.5rem]">
           <Logo />
         </span>
+
         <Card className="md:w-96 w-80">
           <CardHeader>
-            <CardTitle>Login</CardTitle>
-            <CardDescription>Login To Your Account</CardDescription>
+            <CardTitle>Sign Up</CardTitle>
+            <CardDescription>Get Your New Account</CardDescription>
           </CardHeader>
           <CardContent>
+            <Input
+              value={credentials.name}
+              onChange={(e) =>
+                setCredentials({ ...credentials, name: e.target.value })
+              }
+              className="my-2"
+              type="text"
+              placeholder="Your Name"
+            />
             <Input
               className="my-2"
               type="text"
@@ -73,6 +86,15 @@ function Login() {
               onChange={(e) =>
                 setCredentials({ ...credentials, phone: e.target.value })
               }
+            />
+            <Input
+              value={credentials.email}
+              onChange={(e) =>
+                setCredentials({ ...credentials, email: e.target.value })
+              }
+              className="my-2"
+              type="email"
+              placeholder="Your Email"
             />
             <Input
               className="my-2"
@@ -90,20 +112,38 @@ function Login() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-
-            <Link to="/signup" className="text-xs underline">
-              Do not have an account ?
+            <div className="flex items-center py-1">
+              <Checkbox
+                id="isSeller"
+                checked={credentials.isSeller}
+                // onCheckedChange={() => setIsSeller(!isSeller)}
+                onCheckedChange={() =>
+                  setCredentials({
+                    ...credentials,
+                    isSeller: !credentials.isSeller,
+                  })
+                }
+              />
+              <label
+                htmlFor="isSeller"
+                className="text-sm font-medium opacity-70 leading-none pl-2 capitalize peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Wanna be a seller ?
+              </label>
+            </div>
+            <Link to="/" className="text-xs underline">
+              Already have an account ?
             </Link>
           </CardContent>
           <CardFooter>
             {isLoading ? (
               <Button disabled className="w-full">
                 <Spinner />
-                Logging You In...
+                Registering...
               </Button>
             ) : (
-              <Button className="w-full" onClick={handleLogin}>
-                Login
+              <Button className="w-full" onClick={handleSubmit}>
+                Sign Up
               </Button>
             )}
           </CardFooter>
@@ -122,6 +162,6 @@ function Login() {
       </div>
     </>
   );
-}
+};
 
-export default Login;
+export default Register;

@@ -1,14 +1,14 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
-import Cart from "./components/custom_components/Cart";
+import Cart from "./components/custom_components/Cart/Cart";
 import Home from "./components/custom_components/Home";
-import Login from "./components/custom_components/Login";
+import Login from "./components/custom_components/User/Login";
 import Navbar from "./components/custom_components/Navbar";
-import Product from "./components/custom_components/Product";
-import ProductByCategory from "./components/custom_components/ProductsByCategory";
-import Register from "./components/custom_components/Register";
-import SellerPanel from "./components/custom_components/SellerPanel";
-import UpdateUserForm from "./components/custom_components/UpdateUserForm";
+import Product from "./components/custom_components/Product/Product";
+import ProductByCategory from "./components/custom_components/Product/ProductsByCategory";
+import Register from "./components/custom_components/User/Register";
+import SellerPanel from "./components/custom_components/User/SellerPanel";
+import UpdateUserForm from "./components/custom_components/User/UpdateUserForm";
 import { getUser } from "./utils/userService";
 
 function App() {
@@ -18,9 +18,19 @@ function App() {
   const isUserLoggedIn = !!user;
   const page = location.pathname === "/" || location.pathname === "/signup";
 
+  //redirect user to home page if user is already logged in
+  if (
+    isUserLoggedIn &&
+    (location.pathname === "/" || location.pathname === "/signup")
+  ) {
+    return <Navigate to="/home" />;
+  }
+
+  //redirect user to login  page if user is not logged in
   if (!isUserLoggedIn && !page) {
     return <Navigate to="/" />;
   }
+
   return (
     <>
       {!page && <Navbar />}

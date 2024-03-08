@@ -31,7 +31,9 @@ const ProductsByCategory = () => {
           </p>
           <p className="ml-2 text-slate-400">{category}</p>
         </div>
-        <ProductCard products={products} />
+        <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5">
+          <ProductCard products={products} />
+        </div>
       </div>
     </>
   );

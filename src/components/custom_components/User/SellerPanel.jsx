@@ -2,8 +2,8 @@ import { getCategories } from "@/utils/categoryService";
 import { createProduct, getProductBySeller } from "@/utils/productService";
 import { AlertCircle, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Button } from "../ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../../ui/alert";
+import { Button } from "../../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,12 +12,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
-import ProductCard from "./ProductCard";
-import Spinner from "./Spinner";
+} from "../../ui/dialog";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Textarea } from "../../ui/textarea";
+import ProductCard from "../Product/ProductCard";
+import Spinner from "../Spinner";
 
 const SellerPanel = () => {
   const [isLoading, setIsLoading] = useState(false);

@@ -12,7 +12,7 @@ import {
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import Logo from "./Logo";
-import User from "./User";
+import User from "./User/User";
 import { Turn as Hamburger } from "hamburger-react";
 
 const Navbar = () => {
