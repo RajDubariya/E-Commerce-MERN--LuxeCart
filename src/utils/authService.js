@@ -4,7 +4,7 @@ import { baseurl } from "./constants";
 const login = async (credentials) => {
   try {
     const response = await axios.post(`${baseurl}/users/login`, credentials);
-
+    console.log(response);
     return response;
   } catch (error) {
     console.log("error while loging (Client)" + error);

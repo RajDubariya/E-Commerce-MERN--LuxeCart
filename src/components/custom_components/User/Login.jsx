@@ -1,54 +1,69 @@
-import { setUser } from "@/redux/reducers/authReducer";
 import { login } from "@/utils/authService";
-import { AlertCircle } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { Alert, AlertDescription, AlertTitle } from "../../ui/alert";
+import { z } from "zod";
 import { Button } from "../../ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../../ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "../../ui/form";
 import { Input } from "../../ui/input";
 import Logo from "../Logo";
 import Spinner from "../Spinner";
 
+const formSchema = z
+  .object({
+    phone: z.string().min(10, {
+      message: "Enter Valid Phone Number !!",
+    }),
+    password: z.string(),
+    confirmPassword: z.string(),
+  })
+  .refine(
+    (data) => {
+      return data.password === data.confirmPassword;
+    },
+    { message: "Passwords do not match !!", path: ["confirmPassword"] }
+  );
+
 function Login() {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: { phone: "", password: "" },
+  });
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [credentials, setCredentials] = useState({ phone: "", password: "" });
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async (values) => {
     try {
       setIsLoading(true);
-      if (credentials.password !== confirmPassword) {
-        setError("Passwords do not match");
-        setIsLoading(false);
-        return;
-      }
-      const response = await login(credentials);
 
-      if (response.status !== 200) {
-        setError(response);
-        setIsLoading(false);
-      }
+      const response = await login(values);
+
       if (response.status === 200) {
         localStorage.setItem("User", JSON.stringify(response.data));
         navigate("/home");
       }
 
-      dispatch(setUser(response.data));
       setIsLoading(false);
+      return;
     } catch (error) {
       console.error("Login failed:", error);
+
       setIsLoading(false);
     }
   };
@@ -62,63 +77,77 @@ function Login() {
         <Card className="md:w-96 w-80">
           <CardHeader>
             <CardTitle>Login</CardTitle>
+
             <CardDescription>Login To Your Account</CardDescription>
           </CardHeader>
           <CardContent>
-            <Input
-              className="my-2"
-              type="text"
-              placeholder="Your Phone Number"
-              value={credentials.phone}
-              onChange={(e) =>
-                setCredentials({ ...credentials, phone: e.target.value })
-              }
-            />
-            <Input
-              className="my-2"
-              type="password"
-              placeholder="Your Password"
-              value={credentials.password}
-              onChange={(e) =>
-                setCredentials({ ...credentials, password: e.target.value })
-              }
-            />
-            <Input
-              className="my-2"
-              type="password"
-              placeholder="Your Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-
-            <Link to="/signup" className="text-xs underline">
-              Do not have an account ?
-            </Link>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleLogin)}>
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem className="pb-2">
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Your Phone Number"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem className="pb-2">
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Your Password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem className="pb-2">
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Confirm Password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Link to="/signup" className="text-xs underline">
+                  Do not have an account ?
+                </Link>
+                {isLoading ? (
+                  <Button disabled className="w-full mt-2">
+                    <Spinner />
+                    Logging You In...
+                  </Button>
+                ) : (
+                  <Button type="submit" className="w-full mt-2">
+                    Login
+                  </Button>
+                )}
+              </form>
+            </Form>
           </CardContent>
-          <CardFooter>
-            {isLoading ? (
-              <Button disabled className="w-full">
-                <Spinner />
-                Logging You In...
-              </Button>
-            ) : (
-              <Button className="w-full" onClick={handleLogin}>
-                Login
-              </Button>
-            )}
-          </CardFooter>
         </Card>
-
-        {error && (
-          <Alert
-            className="md:w-96 w-80 absolute bottom-4"
-            variant="destructive"
-          >
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
       </div>
     </>
   );

@@ -1,54 +1,73 @@
 import { signUp } from "@/utils/authService";
-import { AlertCircle } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { Alert, AlertDescription, AlertTitle } from "../../ui/alert";
+import { z } from "zod";
 import { Button } from "../../ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "../../ui/card";
 import { Checkbox } from "../../ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "../../ui/form";
 import { Input } from "../../ui/input";
 import Logo from "../Logo";
 import Spinner from "../Spinner";
+const formSchema = z
+  .object({
+    name: z.string(),
+    phone: z.string().min(10, {
+      message: "Enter Valid Phone Number !!",
+    }),
+    email: z.string().email(),
+    password: z.string().min(8, {
+      message: "Password must be at least 8 characters long !!",
+    }),
+    confirmPassword: z.string(),
+    isSeller: z.boolean(),
+  })
+  .refine(
+    (data) => {
+      return data.password === data.confirmPassword;
+    },
+    { message: "Passwords do not match !!", path: ["confirmPassword"] }
+  );
 
 const Register = () => {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      phone: "",
+      email: "",
+      password: "",
+      isSeller: false,
+    },
+  });
   const navigate = useNavigate();
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const [credentials, setCredentials] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    password: "",
-    isSeller: false,
-  });
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (values) => {
     try {
       setIsLoading(true);
-      if (credentials.password !== confirmPassword) {
-        setIsLoading(false);
-        setError("Passwords do not match");
-        return;
-      }
-      const response = await signUp(credentials);
-
+      const response = await signUp(values);
       if (response.status !== 200) {
-        setError(response);
         setIsLoading(false);
       }
       if (response.status === 200) {
         navigate("/");
       }
-
       setIsLoading(false);
     } catch (error) {
       console.error("error during regestring:", error);
@@ -69,96 +88,126 @@ const Register = () => {
             <CardDescription>Get Your New Account</CardDescription>
           </CardHeader>
           <CardContent>
-            <Input
-              value={credentials.name}
-              onChange={(e) =>
-                setCredentials({ ...credentials, name: e.target.value })
-              }
-              className="my-2"
-              type="text"
-              placeholder="Your Name"
-            />
-            <Input
-              className="my-2"
-              type="text"
-              placeholder="Your Phone Number"
-              value={credentials.phone}
-              onChange={(e) =>
-                setCredentials({ ...credentials, phone: e.target.value })
-              }
-            />
-            <Input
-              value={credentials.email}
-              onChange={(e) =>
-                setCredentials({ ...credentials, email: e.target.value })
-              }
-              className="my-2"
-              type="email"
-              placeholder="Your Email"
-            />
-            <Input
-              className="my-2"
-              type="password"
-              placeholder="Your Password"
-              value={credentials.password}
-              onChange={(e) =>
-                setCredentials({ ...credentials, password: e.target.value })
-              }
-            />
-            <Input
-              className="my-2"
-              type="password"
-              placeholder="Your Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <div className="flex items-center py-1">
-              <Checkbox
-                id="isSeller"
-                checked={credentials.isSeller}
-                // onCheckedChange={() => setIsSeller(!isSeller)}
-                onCheckedChange={() =>
-                  setCredentials({
-                    ...credentials,
-                    isSeller: !credentials.isSeller,
-                  })
-                }
-              />
-              <label
-                htmlFor="isSeller"
-                className="text-sm font-medium opacity-70 leading-none pl-2 capitalize peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Wanna be a seller ?
-              </label>
-            </div>
-            <Link to="/" className="text-xs underline">
-              Already have an account ?
-            </Link>
-          </CardContent>
-          <CardFooter>
-            {isLoading ? (
-              <Button disabled className="w-full">
-                <Spinner />
-                Registering...
-              </Button>
-            ) : (
-              <Button className="w-full" onClick={handleSubmit}>
-                Sign Up
-              </Button>
-            )}
-          </CardFooter>
-        </Card>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleSubmit)}>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem className="pb-2">
+                      <FormControl>
+                        <Input type="text" placeholder="Your Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem className="pb-2">
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Your Email Address"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem className="pb-2">
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Your Phone Number"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem className="pb-2">
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Your Password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem className="pb-2">
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Confirm Password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-        {error && (
-          <Alert
-            className="md:w-96 w-80 absolute bottom-4"
-            variant="destructive"
-          >
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+                <FormField
+                  control={form.control}
+                  name="isSeller"
+                  render={({ field }) => (
+                    <FormItem className="pb-2">
+                      <FormControl>
+                        <>
+                          <Checkbox
+                            id="isSeller"
+                            onCheckedChange={field.onChange}
+                          />
+                          <label
+                            htmlFor="isSeller"
+                            className="text-sm font-medium opacity-70 leading-none pl-2 capitalize peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Wanna be a seller ?
+                          </label>
+                        </>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Link to="/" className="text-xs underline">
+                  Already have an account ?
+                </Link>
+                {isLoading ? (
+                  <Button disabled className="w-full mt-2">
+                    <Spinner />
+                    Registering
+                  </Button>
+                ) : (
+                  <Button type="submit" className="w-full mt-2">
+                    Sign Up
+                  </Button>
+                )}
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       </div>
     </>
   );

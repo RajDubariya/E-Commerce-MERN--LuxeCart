@@ -10,6 +10,7 @@ import Register from "./components/custom_components/User/Register";
 import SellerPanel from "./components/custom_components/User/SellerPanel";
 import UpdateUserForm from "./components/custom_components/User/UpdateUserForm";
 import { getUser } from "./utils/userService";
+import { Toaster } from "sonner";
 
 function App() {
   const user = getUser();
@@ -33,6 +34,7 @@ function App() {
 
   return (
     <>
+      <Toaster richColors />
       {!page && <Navbar />}
       <Routes>
         <Route path="/" element={<Login />} />
