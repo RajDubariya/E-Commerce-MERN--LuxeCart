@@ -4,7 +4,10 @@ import { baseurl } from "./constants";
 const login = async (credentials) => {
   try {
     const response = await axios.post(`${baseurl}/users/login`, credentials);
-    console.log(response);
+
+    if (response.status === 200) {
+      localStorage.setItem("User", JSON.stringify(response.data));
+    }
     return response;
   } catch (error) {
     console.log("error while loging (Client)" + error);
@@ -15,12 +18,6 @@ const login = async (credentials) => {
 const signUp = async (credentials) => {
   try {
     const response = await axios.post(`${baseurl}/users/register`, credentials);
-
-    if (response.status === 200) {
-      let userdata = response.data;
-      userdata = JSON.stringify(userdata);
-      localStorage.setItem("User", userdata);
-    }
 
     return response;
   } catch (error) {

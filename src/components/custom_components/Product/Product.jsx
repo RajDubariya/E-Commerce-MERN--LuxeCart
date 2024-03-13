@@ -212,7 +212,7 @@ const Product = () => {
       <div className="grid md:grid-cols-2 gap-10 p-10">
         <div className="flex justify-center">
           <motion.img
-            className="h-[400px]"
+            className="h-[500px]"
             src={product?.imageurl}
             alt={product?.name}
             initial={{ scale: 0.9, opacity: 0.8 }}

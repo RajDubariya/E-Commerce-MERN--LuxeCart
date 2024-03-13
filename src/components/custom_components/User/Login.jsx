@@ -55,7 +55,6 @@ function Login() {
       const response = await login(values);
 
       if (response.status === 200) {
-        localStorage.setItem("User", JSON.stringify(response.data));
         navigate("/home");
       }
 
@@ -70,8 +69,8 @@ function Login() {
 
   return (
     <>
-      <div className="w-full h-screen flex flex-col items-center justify-center p-4 relative">
-        <span className="absolute top-[3.5rem]">
+      <div className="w-full h-screen flex flex-col items-center justify-center p-4 ">
+        <span className="mb-3">
           <Logo />
         </span>
         <Card className="md:w-96 w-80">

@@ -2,7 +2,7 @@ import axios from "axios";
 import { baseurl } from "./constants";
 import { getUser } from "./userService";
 
-const userId = getUser()?.userId;
+let userId = getUser()?.userId;
 
 const getUserCart = async () => {
   try {
@@ -41,7 +41,6 @@ const addItemToCart = async (productId) => {
 
 const updateCartItemQuantity = async (productId, quantity) => {
   try {
-    console.log(productId, quantity);
     const response = await axios.put(`${baseurl}/cart/updateitemquantity`, {
       userId,
       productId,

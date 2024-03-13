@@ -10,7 +10,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "../../ui/card";
 import { Checkbox } from "../../ui/checkbox";
 import {
@@ -23,6 +23,7 @@ import {
 import { Input } from "../../ui/input";
 import Logo from "../Logo";
 import Spinner from "../Spinner";
+
 const formSchema = z
   .object({
     name: z.string(),
@@ -77,8 +78,8 @@ const Register = () => {
 
   return (
     <>
-      <div className="w-full h-screen flex flex-col items-center justify-center p-4 relative">
-        <span className="absolute top-[3.5rem]">
+      <div className="w-full h-screen flex flex-col items-center justify-center p-4">
+        <span className="mb-3">
           <Logo />
         </span>
 
