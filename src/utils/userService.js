@@ -3,7 +3,3 @@ export const getUser = () => {
   user = JSON.parse(user);
   return user;
 };
-
-export const removeUser = () => {
-  localStorage.removeItem("User");
-};

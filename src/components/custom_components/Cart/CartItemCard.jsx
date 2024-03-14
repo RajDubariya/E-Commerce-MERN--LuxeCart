@@ -5,8 +5,10 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../ui/button";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const CartItemCard = ({ items, getCart }) => {
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const [quantities, setQuantities] = useState({});
@@ -16,9 +18,10 @@ const CartItemCard = ({ items, getCart }) => {
       navigate(`/product/${id}`);
     }
   };
+
   const handleItemDelete = async (productId) => {
     try {
-      await deleteCartItem(productId);
+      await deleteCartItem(user?.userId, productId);
       getCart();
     } catch (error) {
       console.log(error);
@@ -27,7 +30,7 @@ const CartItemCard = ({ items, getCart }) => {
 
   const updateQuantity = async (productId, quantity) => {
     try {
-      await updateCartItemQuantity(productId, quantity);
+      await updateCartItemQuantity(user?.userId, productId, quantity);
       getCart();
     } catch (error) {
       console.log(error);

@@ -1,7 +1,9 @@
-import { login } from "@/utils/authService";
+import { setUser } from "@/redux/reducers/authReducer";
+import { authUser } from "@/utils/authService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Button } from "../../ui/button";
@@ -44,32 +46,35 @@ function Login() {
     defaultValues: { phone: "", password: "" },
   });
 
+  //redux
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (values) => {
+  const handleLogin = (credentials) => {
     try {
       setIsLoading(true);
 
-      const response = await login(values);
-
-      if (response.status === 200) {
-        navigate("/home");
-      }
+      authUser("login", credentials).then((res) => {
+        dispatch(setUser(res.data));
+        if (res.status === 200) {
+          navigate("/home");
+        }
+      });
 
       setIsLoading(false);
       return;
     } catch (error) {
       console.error("Login failed:", error);
-
       setIsLoading(false);
     }
   };
 
   return (
     <>
-      <div className="w-full h-screen flex flex-col items-center justify-center p-4 ">
+      <div className="w-full h-screen flex flex-col items-center justify-center p-4">
         <span className="mb-3">
           <Logo />
         </span>

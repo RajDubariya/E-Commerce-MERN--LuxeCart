@@ -1,7 +1,10 @@
-import { getProductSuggestionOnSearch } from "@/utils/productService";
-import { getUser, removeUser } from "@/utils/userService";
+import { removeUser } from "@/redux/reducers/authReducer";
+import { setSuggestedProducts } from "@/redux/reducers/productReducer";
+import { fetchProductData } from "@/utils/productService";
+import { Turn as Hamburger } from "hamburger-react";
 import { ShoppingCartIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import {
@@ -13,20 +16,24 @@ import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import Logo from "./Logo";
 import User from "./User/User";
-import { Turn as Hamburger } from "hamburger-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = getUser();
+  // const user = getUser();
+
+  const { user } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+  const { suggestedProducts } = useSelector((state) => state.product);
 
   const [query, setQuery] = useState("");
-  const [suggestedProducts, setSuggestedProducts] = useState([]);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const logout = () => {
-    removeUser();
+    dispatch(removeUser());
     navigate("/");
   };
+
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -35,21 +42,18 @@ const Navbar = () => {
     setMobileMenuOpen(false);
   };
 
-  const fetchProducts = async () => {
-    const response = await getProductSuggestionOnSearch(query);
-    setSuggestedProducts(response);
-  };
-
   useEffect(() => {
     if (query.trim() !== "") {
-      fetchProducts();
+      fetchProductData(`suggestproduct?query=${query}`).then((res) => {
+        dispatch(setSuggestedProducts(res));
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
   return (
     <div className="px-4 py-3">
-      <nav className="border border-slate-300 bg-white  rounded-full p-3 px-6 flex items-center justify-between">
+      <nav className="border border-slate-300 bg-white rounded-full p-3 px-6 flex items-center justify-between">
         <Logo />
 
         <div className="hidden md:flex items-center w-[30%]">

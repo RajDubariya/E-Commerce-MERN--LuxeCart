@@ -1,30 +1,6 @@
 import axios from "axios";
 import { baseurl } from "./constants";
 
-const login = async (credentials) => {
-  try {
-    const response = await axios.post(`${baseurl}/users/login`, credentials);
-
-    if (response.status === 200) {
-      localStorage.setItem("User", JSON.stringify(response.data));
-    }
-    return response;
-  } catch (error) {
-    console.log("error while loging (Client)" + error);
-    return error.response.data.message;
-  }
-};
-
-const signUp = async (credentials) => {
-  try {
-    const response = await axios.post(`${baseurl}/users/register`, credentials);
-
-    return response;
-  } catch (error) {
-    console.log("error while regestering (Client)" + error);
-    return error.response.data.message;
-  }
-};
 const updateDetails = async (credentials) => {
   try {
     const response = await axios.put(
@@ -35,6 +11,15 @@ const updateDetails = async (credentials) => {
   } catch (error) {
     console.log("error while updating user details (Client)" + error);
     return error.response.data.message;
+  }
+};
+
+const authUser = async (url, params) => {
+  try {
+    const response = await axios.post(`${baseurl}/users/${url}`, params);
+    return response;
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -49,4 +34,4 @@ const updateDetails = async (credentials) => {
 //   }
 // };
 
-export { login, signUp, updateDetails };
+export { updateDetails, authUser };

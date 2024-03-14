@@ -1,11 +1,10 @@
 import { addItemToCart } from "@/utils/cartService";
 import {
   deleteProduct,
-  getProductById,
+  fetchProductData,
   rateProduct,
   updateProduct,
 } from "@/utils/productService";
-import { getUser } from "@/utils/userService";
 import { motion } from "framer-motion";
 import { Check, ShoppingCart, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -28,10 +27,11 @@ import { Textarea } from "../../ui/textarea";
 import Spinner from "../Spinner";
 import ProductReviews from "./ProductReviews";
 import SimilarProducts from "./SimilarProducts";
+import { useDispatch, useSelector } from "react-redux";
+import { setSingleProduct } from "@/redux/reducers/productReducer";
 
 const Product = () => {
   const navigate = useNavigate();
-  const [product, setProduct] = useState(null);
   const [rating, setRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
@@ -43,21 +43,22 @@ const Product = () => {
   });
 
   const { productId } = useParams();
+  const dispatch = useDispatch();
 
-  const user = getUser();
+  const { user } = useSelector((state) => state.auth);
+  const { singleProduct } = useSelector((state) => state.product);
 
-  const fetchProduct = async () => {
+  const fetchProduct = () => {
     try {
-      const response = await getProductById(productId);
-
-      setProduct(response);
+      fetchProductData(`getproduct/${productId}`).then((res) => {
+        dispatch(setSingleProduct(res));
+      });
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
     fetchProduct();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
@@ -82,18 +83,18 @@ const Product = () => {
     setIsLoading(true);
 
     try {
-      const userRating = product.ratings.find(
+      const userRating = singleProduct.ratings.find(
         (rating) => rating.postedby === user.userId
       );
 
       if (userRating) {
         alert("You have already rated this product");
       } else {
-        await rateProduct(id, rating, review);
+        await rateProduct(id, rating, review, user?.userId);
         setReview("");
         setRating(0);
         // After successfully rating, fetch the product again
-        await fetchProduct();
+        fetchProduct();
       }
     } catch (error) {
       console.log(error);
@@ -110,7 +111,7 @@ const Product = () => {
     setIsLoading(true);
     try {
       await updateProduct(productId, updateProductDetails);
-      await fetchProduct();
+      fetchProduct();
     } catch (error) {
       console.log(error);
     }
@@ -119,7 +120,7 @@ const Product = () => {
 
   const addItemToCartClick = async () => {
     try {
-      await addItemToCart(productId);
+      await addItemToCart(user?.userId, productId);
       setIsAddedToCart(true);
     } catch (error) {
       console.log(error);
@@ -128,7 +129,7 @@ const Product = () => {
 
   return (
     <>
-      {user?.isSeller && product?.seller === user?.userId ? (
+      {user?.isSeller && singleProduct?.seller === user?.userId ? (
         <div className="flex items-center p-3 justify-end">
           <Button onClick={handleDelete} variant="destructive">
             <Trash2Icon size={20} />
@@ -213,8 +214,8 @@ const Product = () => {
         <div className="flex justify-center">
           <motion.img
             className="h-[500px]"
-            src={product?.imageurl}
-            alt={product?.name}
+            src={singleProduct?.imageurl}
+            alt={singleProduct?.name}
             initial={{ scale: 0.9, opacity: 0.8 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.6 }}
@@ -223,36 +224,38 @@ const Product = () => {
 
         <div className="mt-5 md:mt-0">
           <h1 className="text-4xl font-semibold text-slate-500 tracking-wider capitalize">
-            {product?.name}
+            {singleProduct?.name}
           </h1>
           <p className="my-2 text-xl font-normal text-gray-700 ">
             <sup>₹</sup>
-            {product?.price}
+            {singleProduct?.price}
           </p>
           <div className="md:w-[70%] py-2 tracking-wide text-slate-600 ">
-            <p>{product?.description}</p>
+            <p>{singleProduct?.description}</p>
           </div>
-          <p className="py-1 font-semibold">Brand : {product?.brand}</p>
+          <p className="py-1 font-semibold">Brand : {singleProduct?.brand}</p>
           <div className="py-1 text-sm flex items-center">
             <p>Category : </p>
             <Badge
-              onClick={() => navigate(`/category/${product.category?.name}`)}
+              onClick={() =>
+                navigate(`/category/${singleProduct.category?.name}`)
+              }
               variant="secondary"
               className=" cursor-pointer"
             >
-              {product?.category.name}
+              {singleProduct?.category.name}
             </Badge>
           </div>
           <div className="flex items-center py-2">
-            {product?.numberOfRatings > 0 ? (
-              renderStars(product)
+            {singleProduct?.numberOfRatings > 0 ? (
+              renderStars(singleProduct)
             ) : (
               <TiStarOutline className="text-yellow-400" size={22} />
             )}
-            <Badge variant="outline">{product?.numberOfRatings}</Badge>
+            <Badge variant="outline">{singleProduct?.numberOfRatings}</Badge>
           </div>
           {/* rating */}
-          {!(user.userId === product?.seller) && (
+          {!(user.userId === singleProduct?.seller) && (
             <div className="flex flex-col capitalize justify-center py-2">
               <div className="flex">
                 <p>rate this product : </p>
@@ -273,7 +276,7 @@ const Product = () => {
                   value={review}
                 />
                 <Button
-                  onClick={() => handleRateClick(product?._id)}
+                  onClick={() => handleRateClick(singleProduct?._id)}
                   className="mt-3"
                 >
                   {isLoading ? <Spinner /> : "Rate"}
@@ -283,7 +286,7 @@ const Product = () => {
           )}
 
           {/* rating */}
-          {product?.seller !== user?.userId && (
+          {singleProduct?.seller !== user?.userId && (
             <div>
               {isAddedToCart ? (
                 <Button disabled className="bg-green-600 ">
@@ -299,7 +302,7 @@ const Product = () => {
           )}
         </div>
       </div>
-      <ProductReviews product={product} />
+      <ProductReviews product={singleProduct} />
       <SimilarProducts productId={productId} />
     </>
   );

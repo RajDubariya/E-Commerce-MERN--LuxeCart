@@ -1,5 +1,4 @@
 import express from "express";
-import { authenticateToken } from "../utils/authenticateToken.js";
 import {
   createProduct,
   deleteProduct,
@@ -10,7 +9,9 @@ import {
   similarProducts,
   suggestProductOnQuery,
   updateProductDetails,
+  getCategoryProductsByName,
 } from "../Controllers/productController.js";
+import { authenticateToken } from "../utils/authenticateToken.js";
 
 const productRoute = express.Router();
 
@@ -35,5 +36,10 @@ productRoute.get(
 );
 productRoute.get("/suggestproduct", authenticateToken, suggestProductOnQuery);
 productRoute.get("/similar/:productId", authenticateToken, similarProducts);
+productRoute.get(
+  "/category/:category",
+  authenticateToken,
+  getCategoryProductsByName
+);
 
 export { productRoute };

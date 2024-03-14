@@ -1,7 +1,10 @@
+import { setCategory } from "@/redux/reducers/categoryReducer";
+import { setSellerProducts } from "@/redux/reducers/productReducer";
 import { getCategories } from "@/utils/categoryService";
-import { createProduct, getProductBySeller } from "@/utils/productService";
+import { createProduct, fetchProductData } from "@/utils/productService";
 import { AlertCircle, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Alert, AlertDescription, AlertTitle } from "../../ui/alert";
 import { Button } from "../../ui/button";
 import {
@@ -30,22 +33,26 @@ const SellerPanel = () => {
     category: "",
     image: null,
   });
-  const [categories, setCategories] = useState([]);
-  const [sellerProducts, setSellerProducts] = useState([]);
 
-  const fetchCategories = async () => {
-    const response = await getCategories();
-    setCategories(response);
-  };
+  //redux
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { categories } = useSelector((state) => state.category);
+  const { sellerProducts } = useSelector((state) => state.product);
 
-  const fetchProducts = async () => {
-    const response = await getProductBySeller();
-    setSellerProducts(response);
+  const fetchProducts = () => {
+    fetchProductData(`getproducts/${user?.userId}`).then((res) => {
+      dispatch(setSellerProducts(res));
+    });
   };
 
   useEffect(() => {
     fetchProducts();
-    fetchCategories();
+
+    getCategories("getcategories").then((res) => {
+      dispatch(setCategory(res));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleImageChange = (e) => {
@@ -59,11 +66,11 @@ const SellerPanel = () => {
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const response = await createProduct(productDetails);
+      const response = await createProduct(productDetails, user?.userId);
       if (response.status !== 200) {
         setError(response);
       }
-      await fetchProducts();
+      fetchProducts();
       setIsLoading(false);
     } catch (error) {
       console.error("Product Creation failed:", error);

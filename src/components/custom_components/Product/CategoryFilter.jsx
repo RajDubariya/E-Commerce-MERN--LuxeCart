@@ -1,18 +1,20 @@
+import { setCategory } from "@/redux/reducers/categoryReducer";
 import { getCategories } from "@/utils/categoryService";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const CategoryFilter = () => {
   const navigate = useNavigate();
-  const [categories, setCategories] = useState([]);
 
-  const fetchCategories = async () => {
-    const response = await getCategories();
-    setCategories(response);
-  };
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => state.category);
 
   useEffect(() => {
-    fetchCategories();
+    getCategories("getcategories").then((res) => {
+      dispatch(setCategory(res));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

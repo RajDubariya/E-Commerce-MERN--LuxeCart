@@ -1,19 +1,19 @@
+import { useSelector } from "react-redux";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import Cart from "./components/custom_components/Cart/Cart";
 import Home from "./components/custom_components/Home";
-import Login from "./components/custom_components/User/Login";
 import Navbar from "./components/custom_components/Navbar";
 import Product from "./components/custom_components/Product/Product";
 import ProductByCategory from "./components/custom_components/Product/ProductsByCategory";
+import Login from "./components/custom_components/User/Login";
 import Register from "./components/custom_components/User/Register";
 import SellerPanel from "./components/custom_components/User/SellerPanel";
 import UpdateUserForm from "./components/custom_components/User/UpdateUserForm";
-import { getUser } from "./utils/userService";
-import { Toaster } from "sonner";
 
 function App() {
-  const user = getUser();
+  const { user } = useSelector((state) => state.auth);
+
   const location = useLocation();
 
   const isUserLoggedIn = !!user;
@@ -34,7 +34,6 @@ function App() {
 
   return (
     <>
-      <Toaster richColors />
       {!page && <Navbar />}
       <Routes>
         <Route path="/" element={<Login />} />

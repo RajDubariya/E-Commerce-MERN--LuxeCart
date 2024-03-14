@@ -1,10 +1,7 @@
 import axios from "axios";
 import { baseurl } from "./constants";
-import { getUser } from "./userService";
 
-let userId = getUser()?.userId;
-
-const getUserCart = async () => {
+const getUserCart = async (userId) => {
   try {
     const response = await axios.get(`${baseurl}/cart/getcart/${userId}`);
     return response.data;
@@ -14,7 +11,7 @@ const getUserCart = async () => {
   }
 };
 
-const deleteCartItem = async (productId) => {
+const deleteCartItem = async (userId, productId) => {
   try {
     const response = await axios.delete(
       `${baseurl}/cart/removeitemfromcart/${userId}/${productId}`
@@ -26,7 +23,7 @@ const deleteCartItem = async (productId) => {
   }
 };
 
-const addItemToCart = async (productId) => {
+const addItemToCart = async (userId, productId) => {
   try {
     const response = await axios.post(`${baseurl}/cart/add`, {
       userId,
@@ -39,7 +36,7 @@ const addItemToCart = async (productId) => {
   }
 };
 
-const updateCartItemQuantity = async (productId, quantity) => {
+const updateCartItemQuantity = async (userId, productId, quantity) => {
   try {
     const response = await axios.put(`${baseurl}/cart/updateitemquantity`, {
       userId,

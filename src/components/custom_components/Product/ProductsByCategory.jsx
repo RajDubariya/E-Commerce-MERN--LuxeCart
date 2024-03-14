@@ -1,21 +1,22 @@
-import { getProductsByCategory } from "@/utils/productService";
-import { useEffect, useState } from "react";
+import { setProducts } from "@/redux/reducers/productReducer";
+import { fetchProductData } from "@/utils/productService";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
 
 const ProductsByCategory = () => {
   const navigate = useNavigate();
   const { category } = useParams();
-  const [products, setProducts] = useState([]);
+  // redux
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.product);
 
   useEffect(() => {
     try {
-      const fetchProducts = async () => {
-        const response = await getProductsByCategory(category);
-        setProducts(response?.products);
-      };
-
-      fetchProducts();
+      fetchProductData(`category/${category}`).then((res) => {
+        dispatch(setProducts(res.products));
+      });
     } catch (error) {
       console.error(error);
     }

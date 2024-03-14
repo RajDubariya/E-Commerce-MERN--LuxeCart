@@ -1,6 +1,8 @@
-import { similarProducts } from "@/utils/productService";
+import { setSimilarProducts } from "@/redux/reducers/productReducer";
+import { fetchProductData } from "@/utils/productService";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
@@ -8,11 +10,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ProductCard from "./ProductCard";
 
 const SimilarProducts = ({ productId }) => {
-  const [products, setProducts] = useState([]);
-  const fetchSimilarProducts = async (id) => {
+  const dispatch = useDispatch();
+  const { similarProducts } = useSelector((state) => state.product);
+
+  const fetchSimilarProducts = (id) => {
     try {
-      const response = await similarProducts(id);
-      setProducts(response);
+      fetchProductData(`similar/${id}`).then((res) => {
+        dispatch(setSimilarProducts(res));
+      });
     } catch (error) {
       console.log(error);
     }
@@ -26,7 +31,7 @@ const SimilarProducts = ({ productId }) => {
     <>
       <div className="p-4">
         <p className="text-2xl font-semibold pb-3">Similar Products</p>
-        {products.length > 0 ? (
+        {similarProducts?.length > 0 ? (
           <Swiper
             slidesPerView={1}
             spaceBetween={20}
@@ -49,10 +54,10 @@ const SimilarProducts = ({ productId }) => {
             }}
             modules={[Pagination]}
           >
-            {products.map((product) => (
+            {similarProducts.map((product) => (
               <SwiperSlide key={product?._id}>
                 <ProductCard
-                  products={products}
+                  products={similarProducts}
                   fetchSimilarProducts={fetchSimilarProducts}
                 />
               </SwiperSlide>

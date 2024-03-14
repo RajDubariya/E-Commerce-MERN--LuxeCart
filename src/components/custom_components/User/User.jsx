@@ -1,4 +1,3 @@
-import { getUser, removeUser } from "@/utils/userService";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import { Button } from "../../ui/button";
@@ -8,13 +7,16 @@ import {
   HoverCardTrigger,
 } from "../../ui/hover-card";
 import { Separator } from "../../ui/separator";
+import { useDispatch, useSelector } from "react-redux";
+import { removeUser } from "@/redux/reducers/authReducer";
 
 const User = () => {
   const navigate = useNavigate();
-  const user = getUser();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   const logout = () => {
-    removeUser();
+    dispatch(removeUser());
     navigate("/");
   };
   const handleClick = () => {

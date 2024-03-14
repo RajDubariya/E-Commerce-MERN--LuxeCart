@@ -1,9 +1,7 @@
 import axios from "axios";
 import { baseurl, config } from "./constants";
-import { getUser } from "./userService";
 
-const userId = getUser()?.userId;
-const createProduct = async (productDetails) => {
+const createProduct = async (productDetails, userId) => {
   try {
     const formData = new FormData();
     formData.append("name", productDetails.name);
@@ -26,31 +24,21 @@ const createProduct = async (productDetails) => {
   }
 };
 
-const getProducts = async () => {
-  try {
-    const response = await axios.get(`${baseurl}/products/getproducts`, config);
-
-    return response.data;
-  } catch (error) {
-    console.log("error while fetching products (Client)" + error);
-    return error;
-  }
-};
-
-const getProductById = async (productId) => {
+const fetchProductData = async (url, params) => {
   try {
     const response = await axios.get(
-      `${baseurl}/products/getproduct/${productId}`,
-      config
+      `${baseurl}/products/${url}`,
+      config,
+      params
     );
+
     return response.data;
   } catch (error) {
-    console.log("error while getting product with id (Client)" + error);
-    return error;
+    console.log(error);
   }
 };
 
-const rateProduct = async (id, rating, review) => {
+const rateProduct = async (id, rating, review, userId) => {
   try {
     const response = await axios.put(
       `${baseurl}/products/rateproduct/${id}`,
@@ -61,31 +49,6 @@ const rateProduct = async (id, rating, review) => {
     return response;
   } catch (error) {
     console.log("error while rating product (Client)" + error);
-    return error;
-  }
-};
-
-const getProductsByCategory = async (category) => {
-  try {
-    const response = await axios.get(
-      `${baseurl}/category/getcategory/${category}`,
-      config
-    );
-    return response.data;
-  } catch (error) {
-    console.log("error while fetching products by category (Client)" + error);
-    return error;
-  }
-};
-const getProductBySeller = async () => {
-  try {
-    const response = await axios.get(
-      `${baseurl}/products/getproducts/${userId}`,
-      config
-    );
-    return response.data;
-  } catch (error) {
-    console.log("error while fetching products by seller (Client)" + error);
     return error;
   }
 };
@@ -117,43 +80,10 @@ const updateProduct = async (productId, updateProductDetails) => {
   }
 };
 
-const getProductSuggestionOnSearch = async (query) => {
-  try {
-    const response = await axios.get(
-      `${baseurl}/products/suggestproduct?query=${query}`,
-      config
-    );
-
-    return response.data;
-  } catch (error) {
-    console.log(
-      "error while fetching product suggestion on search (Client)" + error
-    );
-    return error;
-  }
-};
-
-const similarProducts = async (productId) => {
-  try {
-    const response = await axios.get(
-      `${baseurl}/products/similar/${productId}`,
-      config
-    );
-    return response.data;
-  } catch (error) {
-    console.log("error while fetching similar products (Client)" + error);
-    return error;
-  }
-};
 export {
   createProduct,
-  getProducts,
-  getProductById,
   rateProduct,
-  getProductsByCategory,
-  getProductBySeller,
   deleteProduct,
   updateProduct,
-  getProductSuggestionOnSearch,
-  similarProducts,
+  fetchProductData,
 };

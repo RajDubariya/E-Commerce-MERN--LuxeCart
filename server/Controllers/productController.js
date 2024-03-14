@@ -224,6 +224,25 @@ const similarProducts = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+//to get products by category
+const getCategoryProductsByName = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    const foundCategory = await (
+      await Category.findOne({ name: category })
+    ).populate({
+      path: "products",
+    });
+
+    res.status(200).json(foundCategory);
+  } catch (error) {
+    console.error(`error while fetching a category (backend)`);
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
 export {
   createProduct,
   getProducts,
@@ -234,4 +253,5 @@ export {
   updateProductDetails,
   suggestProductOnQuery,
   similarProducts,
+  getCategoryProductsByName,
 };

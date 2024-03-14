@@ -1,4 +1,4 @@
-import { signUp } from "@/utils/authService";
+import { authUser } from "@/utils/authService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -59,16 +59,15 @@ const Register = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = (credentials) => {
     try {
       setIsLoading(true);
-      const response = await signUp(values);
-      if (response.status !== 200) {
-        setIsLoading(false);
-      }
-      if (response.status === 200) {
-        navigate("/");
-      }
+
+      authUser("register", credentials).then((res) => {
+        if (res.status === 200) {
+          navigate("/");
+        }
+      });
       setIsLoading(false);
     } catch (error) {
       console.error("error during regestring:", error);

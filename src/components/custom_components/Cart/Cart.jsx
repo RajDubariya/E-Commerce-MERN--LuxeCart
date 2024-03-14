@@ -1,22 +1,28 @@
 import { getUserCart } from "@/utils/cartService";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "../../ui/button";
 import { Separator } from "../../ui/separator";
-import CartItemCard from "./CartItems";
+import CartItemCard from "./CartItemCard";
+import { useDispatch, useSelector } from "react-redux";
+import { setCart } from "@/redux/reducers/cartReducer";
 
 const Cart = () => {
-  const [cart, setCart] = useState(null);
+  const dispatch = useDispatch();
+  const { cart } = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.auth);
 
   const getCart = async () => {
     try {
-      const cart = await getUserCart();
-      setCart(cart);
+      getUserCart(user?.userId).then((res) => {
+        dispatch(setCart(res));
+      });
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
     getCart();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

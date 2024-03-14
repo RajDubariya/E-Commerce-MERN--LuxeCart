@@ -1,22 +1,25 @@
-import { getProducts } from "@/utils/productService";
-import { useEffect, useState } from "react";
+import { setProducts } from "@/redux/reducers/productReducer";
+import { fetchProductData } from "@/utils/productService";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import CategoryFilter from "./Product/CategoryFilter";
 import ProductCard from "./Product/ProductCard";
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.product);
 
   useEffect(() => {
     try {
-      const fetchProducts = async () => {
-        const products = await getProducts();
-        setProducts(products);
-      };
-      fetchProducts();
+      fetchProductData("getproducts").then((res) => {
+        dispatch(setProducts(res));
+      });
     } catch (error) {
       console.error(error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <div className="flex p-3">
       <div>
